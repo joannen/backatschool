@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/scan_beacon_action"
+        app:showAsAction="always"
+        android:title="Scan"/>
+        <!--android:onClick="showBeaconList"-->
+
+    <item
+        android:id="@+id/stop_scan_action"
+        app:showAsAction="always"
+        android:title="Stop"/>
+    <!--android:onClick="method for stop scaning for beacons"-->
+</menu>

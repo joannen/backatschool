@@ -2,6 +2,7 @@ package se.theyellowbelliedmarmot.backatschool.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
@@ -27,15 +28,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//
-//        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//            Toast.makeText(this, "BLE Not Supported",
-//                    Toast.LENGTH_SHORT).show();
-//            finish();
-//        }
 
-        if(readUser().equals(""))
-            {final EditText authFirstName = new EditText(this);
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "BLE Not Supported",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        if(readUser().equals("")) {
+            final EditText authFirstName = new EditText(this);
             final EditText authLastName = new EditText(this);
             final AlertDialog.Builder authInputBox = new AlertDialog.Builder(MainActivity.this)
                     .setTitle("Enter your'e name: ")
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 saveUser(firstName, lastName);
                                 userService.registerUser(user, getApplicationContext());
+                                Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
+                                startActivity(intent);
                             } catch (Exception e){
                                 e.printStackTrace();
                             }
@@ -67,9 +70,10 @@ public class MainActivity extends AppCompatActivity {
             authInputBox.create();
             authInputBox.show();
         }
-//        else {
-            // Create new Intent and start Scan Activity
-//        }
+        else {
+            Intent intent = new Intent(this, ScanActiveBeacon.class);
+            startActivity(intent);
+        }
     }
 
     private void saveUser(String firstName, String lastName){

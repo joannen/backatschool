@@ -35,6 +35,7 @@ public final class UserService {
                         } else {
                             Log.d(TAG, "no result");
                         }
+                        
                     }
                 });
     }
