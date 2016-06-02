@@ -1,5 +1,11 @@
 package se.theyellowbelliedmarmot.backatschool.service;
 
+import android.content.Context;
+import android.util.Log;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
+
 import se.theyellowbelliedmarmot.backatschool.model.User;
 
 /**
@@ -7,14 +13,29 @@ import se.theyellowbelliedmarmot.backatschool.model.User;
  */
 public final class UserService {
 
-    private User user;
+    private static final String TAG = UserService.class.getSimpleName();
     private static String URL = "http://beacons.zenzor.io/sys/api/register_user";
+    private static String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
 
-    public UserService(User user) {
-        this.user = user;
-    }
+    public void registerUser(final User user, Context context) {
 
-    public void registerUser(User user){
+        String input = "input={\"api_key\":\"" + APIKEY + "\",\"first_name\":\""
+                        + user.getFirstName() + "\",\"last_name\":\"" + user.getLastName() + "\"}";
 
+        Ion.with(context).load(URL)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setStringBody(input)
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                    @Override
+                    public void onCompleted(Exception e, String result) {
+                        if (result != null) {
+                            Log.d(TAG, result);
+                            Log.d(user.getFirstName(), user.getLastName());
+                        } else {
+                            Log.d(TAG, "no result");
+                        }
+                    }
+                });
     }
 }
