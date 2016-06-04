@@ -11,5 +11,6 @@
         android:id="@+id/stop_scan_action"
         app:showAsAction="always"
         android:title="Stop"/>
+
     <!--android:onClick="method for stop scaning for beacons"-->
 </menu>

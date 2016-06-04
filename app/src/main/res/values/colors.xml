@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F1FAFA</color>
-    <color name="colorAccent">#ffdb4d</color>
+    <color name="colorPrimary">#f1fafa</color>
+    <color name="colorAccent">#e6f0db</color>
     <color name="textGray">#636969</color>
-    <color name="beaconBlue">#367bc1</color>
+    <color name="mainBlue">#00b3b3</color>
     <color name="backgroundBlue">#b3daff</color>
+    <color name="backgroundLightGray">#fffafafa</color>
 </resources>
