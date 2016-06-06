@@ -90,4 +90,13 @@ public class MainActivity extends AppCompatActivity {
         String lastName = sharedPreferences.getString("last_name", "");
         return  firstName + lastName;
     }
+
+    // Test this
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }

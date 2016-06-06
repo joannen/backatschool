@@ -88,18 +88,6 @@ public class ScanActiveBeacon extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.scan_beacon_action){
-
-            Toast.makeText(getApplicationContext(), "Scanning for beacons", Toast.LENGTH_SHORT).show();
-        }
-        if (item.getItemId() == R.id.stop_scan_action){
-            Toast.makeText(getApplicationContext(), "Stopped scan for beacons", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public void displayList(MenuItem item) {
         //request permission for access_coarse_location.
         if (ContextCompat.checkSelfPermission(this,
@@ -144,6 +132,8 @@ public class ScanActiveBeacon extends AppCompatActivity {
                 }
             }, SCAN_PERIOD);
             scanner.startScan(scanFilters, scanSettings, scanCallback);
+            // Test this
+            Toast.makeText(getApplicationContext(), "Scanning for beacons", Toast.LENGTH_SHORT).show();
         }  else {
             scanner.stopScan(scanCallback);
         }
@@ -170,7 +160,6 @@ public class ScanActiveBeacon extends AppCompatActivity {
         }
     }
 
-
     public void subscribeToBeacon(View view){
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this).setTitle(getString(R.string.confirm_subscription_alert))
                 .setMessage(getString(R.string.confirm_subscription_text))
@@ -193,7 +182,18 @@ public class ScanActiveBeacon extends AppCompatActivity {
         alertDialog.show();
 
     }
+    // Test this
+    public void stopScan(MenuItem item) {
+        scanBeacon(false);
+        Toast.makeText(getApplicationContext(), "Stopped scan for beacons", Toast.LENGTH_SHORT).show();
+    }
 
-
-
+    //Test this
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }
