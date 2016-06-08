@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                             user = new User(firstName, lastName);
                             try {
                                 saveUser(firstName, lastName);
-                                //Send user id from response.
+                                userService.registerUser(user, getApplicationContext());
                                 Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
                                 startActivity(intent);
                             } catch (Exception e){

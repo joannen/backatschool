@@ -10,7 +10,6 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -76,7 +75,6 @@ public class ScanActiveBeacon extends AppCompatActivity {
         ScanFilter filter = new ScanFilter.Builder().setDeviceName("closebeacon.com").build();
         scanFilters.add(filter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
