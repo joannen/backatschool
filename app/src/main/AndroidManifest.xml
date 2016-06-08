@@ -11,6 +11,7 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/school"
@@ -24,7 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ScanActiveBeacon"></activity>
+        <activity android:name=".activity.ScanActiveBeacon" />
+        <activity android:name=".activity.SubscribedBeacons"></activity>
     </application>
 
 </manifest>
