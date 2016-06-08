@@ -40,6 +40,7 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         holder.uuidView.setText("UUID: " +beacons.get(position).getUuid());
         holder.majorView.setText("Major: " +beacons.get(position).getMajor());
         holder.minorView.setText("Minor: " +beacons.get(position).getMinor());
+        holder.nameView.setHint("Name: " + beacons.get(position).getName());
 //        holder.rssiView.setText(beacons.get(position).getRssi());
         holder.rssiView.setText("RSSI: " + String.valueOf(beacons.get(position).getRssi()));
 
@@ -62,6 +63,7 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         public final TextView majorView;
         public final TextView minorView;
         public final TextView rssiView;
+        public final TextView nameView;
 
 
         public BeaconViewHolder(View itemView) {
@@ -71,6 +73,7 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
             this.majorView = (TextView) itemView.findViewById(R.id.major_text);
             this.minorView = (TextView) itemView.findViewById(R.id.minor_text);
             this.rssiView = (TextView) itemView.findViewById(R.id.rssi_text);
+            this.nameView = (TextView) itemView.findViewById(R.id.beacon_name_text);
         }
 
         @Override
@@ -78,6 +81,8 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
             Log.d("CLICKED!", "TJOHOO");
             Intent intent = new Intent(view.getContext(), SubscribedBeacons.class);
             intent.putExtra("uuid", uuidView.getText());
+            intent.putExtra("major", majorView.getText());
+            intent.putExtra("minor", minorView.getText());
             view.getContext().startActivity(intent);
 
         }

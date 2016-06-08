@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="115dp"
+    android:layout_height="130dp"
     android:orientation="vertical"
     android:padding="5dp"
     android:background="#9cdbe0">
@@ -19,6 +19,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
 
         <TextView
             android:id="@+id/major_text"
@@ -52,15 +53,28 @@
             android:text="Beacon"
             />
 
-        <Button
-            android:id="@+id/subscribe_button"
+
+        <TextView
+            android:id="@+id/beacon_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:text="Subscribe"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@id/rssi_text"
-            android:onClick="subscribeToBeacon"/>
+            android:textSize="15sp"
+            android:layout_below="@id/rssi_text"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/material_blue_grey_950"
+            />
+
+
+
+        <!--<Button-->
+            <!--android:id="@+id/subscribe_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAllCaps="false"-->
+            <!--android:text="Subscribe"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignBottom="@id/rssi_text"-->
+            <!--android:onClick="subscribeToBeacon"/>-->
 
     </RelativeLayout>
 

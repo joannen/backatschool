@@ -111,7 +111,7 @@ public class ScanActiveBeacon extends AppCompatActivity {
             int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
             String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
 
-            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi());
+            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName());
             addBeaconToList(beacon);
         }
         @Override

@@ -9,12 +9,18 @@ public final class Beacon implements Comparable<Beacon> {
     private String major;
     private String minor;
     private int rssi;
+    private String name;
 
-    public Beacon(String uuid, String major, String minor, int rssi) {
+    public Beacon(String uuid, String major, String minor, int rssi, String name) {
         this.uuid = uuid;
         this.major = major;
         this.minor = minor;
         this.rssi = rssi;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getUuid() {
@@ -40,6 +46,7 @@ public final class Beacon implements Comparable<Beacon> {
                 ", major='" + major + '\'' +
                 ", minor='" + minor + '\'' +
                 ", rssi=" + rssi +
+                ", name='" + name + '\'' +
                 '}';
     }
 
