@@ -1,7 +1,9 @@
 package se.theyellowbelliedmarmot.backatschool.service;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
@@ -16,6 +18,7 @@ public final class UserService {
     private static final String TAG = UserService.class.getSimpleName();
     private static String URL = "http://beacons.zenzor.io/sys/api/register_user";
     private static String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
+
 
     public void registerUser(final User user, Context context) {
 
@@ -35,8 +38,8 @@ public final class UserService {
                         } else {
                             Log.d(TAG, "no result");
                         }
-                        
                     }
                 });
     }
+
 }

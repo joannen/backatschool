@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.User;
 import se.theyellowbelliedmarmot.backatschool.service.UserService;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                             user = new User(firstName, lastName);
                             try {
                                 saveUser(firstName, lastName);
-                                userService.registerUser(user, getApplicationContext());
+                                //Send user id from response.
                                 Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
                                 startActivity(intent);
                             } catch (Exception e){
@@ -91,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
     }
 
+
     private String readUser(){
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         String firstName = sharedPreferences.getString("first_name","");
@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         return  firstName + lastName;
     }
 
-    // Test this
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
