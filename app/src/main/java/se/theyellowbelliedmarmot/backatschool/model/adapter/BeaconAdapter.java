@@ -3,6 +3,7 @@ package se.theyellowbelliedmarmot.backatschool.model.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         return beacons.size();
     }
 
-    public static final class BeaconViewHolder extends RecyclerView.ViewHolder {
+    public static final class BeaconViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView uuidView;
         public final TextView majorView;
         public final TextView minorView;
@@ -63,10 +64,16 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
 
         public BeaconViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             this.uuidView = (TextView) itemView.findViewById(R.id.uuid_text);
             this.majorView = (TextView) itemView.findViewById(R.id.major_text);
             this.minorView = (TextView) itemView.findViewById(R.id.minor_text);
             this.rssiView = (TextView) itemView.findViewById(R.id.rssi_text);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.d("CLICKED!", "TJOHOO");
         }
     }
 }
