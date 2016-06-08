@@ -5,11 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import se.theyellowbelliedmarmot.backatschool.R;
@@ -36,12 +36,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(readUser().equals("")) {
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
             final EditText authFirstName = new EditText(this);
+            authFirstName.setHint("Enter first name");
+            linearLayout.addView(authFirstName);
             final EditText authLastName = new EditText(this);
+            authLastName.setHint("Enter last name");
+            linearLayout.addView(authLastName);
+
             final AlertDialog.Builder authInputBox = new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Enter your'e name: ")
-                    .setView(authFirstName)
-                    .setView(authLastName)
+                    .setTitle("Enter your name: ")
+                    .setView(linearLayout)
+//                    .setView(authLastName)
                     .setCancelable(false)
                     .setPositiveButton("Check In", new DialogInterface.OnClickListener() {
                         @Override
