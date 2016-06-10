@@ -154,6 +154,8 @@ public class ScanActiveBeacon extends BaseActivity {
     private void addBeaconToList(Beacon beacon){
         if (!beacons.contains(beacon)){
             beacons.add(beacon);
+            Beacon b = new Beacon("","","",-105,"");
+            beacons.add(b);
             Collections.sort(beacons, rssiComparator);
             adapter.notifyDataSetChanged();
         }

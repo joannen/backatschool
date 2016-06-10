@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f1fafa</color>
-    <color name="colorAccent">#e6f0db</color>
-    <color name="textGray">#636969</color>
-    <color name="mainBlue">#00b3b3</color>
-    <color name="backgroundBlue">#b3daff</color>
-    <color name="backgroundLightGray">#fffafafa</color>
+  <color name="deepBlue">#355C7D</color>
+  <color name="deepPurple">#6C5B7B</color>
+  <color name="pirPul">#C06C84</color>
+  <color name="pinkRed">#F67280</color>
+  <color name="flamingo">#F8B195</color>
+  <color name="textDark">#353535</color>
+  <color name="textLight">#F6F6F6</color>
+  <color name="lightGray">#dddddd</color>
+  <color name="middleGray">#8d8d8d</color>
+  <color name="darkGreen">#35687d</color>
+  <color name="lightGreen">#99cccc</color>
 </resources>

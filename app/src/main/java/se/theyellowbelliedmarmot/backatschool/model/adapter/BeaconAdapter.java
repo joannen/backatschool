@@ -41,14 +41,13 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         holder.majorView.setText(beacons.get(position).getMajor());
         holder.minorView.setText(beacons.get(position).getMinor());
         holder.nameView.setHint(beacons.get(position).getName());
-//        holder.rssiView.setText(beacons.get(position).getRssi());
         holder.rssiView.setText(String.valueOf(beacons.get(position).getRssi()));
 
 
         if (position % 2 == 0) {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.lightGreen));
         } else {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.lightGray));
         }
 
     }

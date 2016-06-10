@@ -4,15 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="115dp"
     android:orientation="vertical"
-    android:padding="5dp"
-    android:background="#9cdbe0">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/subsc_uuid_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="17sp"
-        android:textColor="@color/material_blue_grey_950"
+        android:textColor="@color/textDark"
         android:text="Beacon"
         android:textStyle="normal|bold"/>
 
@@ -26,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/material_blue_grey_950"
+            android:textColor="@color/textDark"
             />
 
         <TextView
@@ -35,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="Beacon"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/material_blue_grey_950"
+            android:textColor="@color/textDark"
             android:textSize="15sp"
             />
 
@@ -46,7 +45,7 @@
             android:layout_below="@id/major_text"
             android:text="Beacon"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/material_blue_grey_950"
+            android:textColor="@color/textDark"
             android:textSize="15sp"
             />
 
@@ -57,12 +56,9 @@
             android:textSize="15sp"
             android:layout_below="@id/minor_text"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/material_blue_grey_950"
+            android:textColor="@color/textDark"
             android:text="Beacon"
             />
-
-
-
     </RelativeLayout>
 
 </LinearLayout>
