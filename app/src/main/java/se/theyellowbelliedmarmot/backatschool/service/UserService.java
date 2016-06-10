@@ -17,8 +17,7 @@ public final class UserService {
     private static String URL = "http://beacons.zenzor.io/sys/api/register_user";
     private static String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
 
-    public void registerUser(final User user, Context context) {
-//
+    public void registerUser(final User user, final Context context) {
 //        String input = "input={\"api_key\":\"" + APIKEY + "\",\"first_name\":\""
 //                        + user.getFirstName() + "\",\"last_name\":\"" + user.getLastName() + "\"}";
         String input = inputToString(APIKEY, user);
@@ -26,18 +25,20 @@ public final class UserService {
             Ion.with(context).load(URL)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setStringBody(input)
-                .asString()
-                .setCallback(new FutureCallback<String>() {
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
                     @Override
-                    public void onCompleted(Exception e, String result) {
+                    public void onCompleted(Exception e, JsonObject result) {
                         if (result != null) {
-                            Log.d(TAG, result);
-                            Log.d(user.getFirstName(), user.getLastName());
+                            Log.d(TAG, result.toString());
+
+
                         } else {
                             Log.d(TAG, "no result");
                         }
                     }
                 });
+
     }
 
     private String inputToString(String apiKey, User user){
@@ -45,7 +46,9 @@ public final class UserService {
         jsonObject.addProperty("api_key", apiKey);
         jsonObject.addProperty("first_name", user.getFirstName());
         jsonObject.addProperty("last_name", user.getLastName());
-        return "input =" + jsonObject.toString();
+        String inputString = "input =" + jsonObject.toString();
+        Log.d(TAG, inputString);
+        return "input=" + jsonObject.toString();
     }
 
 }

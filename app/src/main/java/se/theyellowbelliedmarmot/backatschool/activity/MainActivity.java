@@ -3,24 +3,30 @@ package se.theyellowbelliedmarmot.backatschool.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.User;
-import se.theyellowbelliedmarmot.backatschool.service.UserService;
+import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private String firstName;
     private String lastName;
-    private UserService userService = new UserService();
     private User user;
+
+    private static String URL = "http://beacons.zenzor.io/sys/api/register_user";
+    private static String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             final AlertDialog.Builder authInputBox = new AlertDialog.Builder(MainActivity.this)
                     .setTitle("Enter your name: ")
                     .setView(linearLayout)
-//                    .setView(authLastName)
                     .setCancelable(false)
                     .setPositiveButton("Check In", new DialogInterface.OnClickListener() {
                         @Override
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                             user = new User(firstName, lastName);
                             try {
                                 saveUser(firstName, lastName);
-                                userService.registerUser(user, getApplicationContext());
+                                registerUser(user, getApplicationContext());
                                 Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
                                 startActivity(intent);
                             } catch (Exception e){
@@ -81,23 +86,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
-    private void saveUser(String firstName, String lastName){
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("first_name", firstName);
-        editor.putString("last_name", lastName);
-        editor.commit();
-    }
-
-
-    private String readUser(){
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
-        String firstName = sharedPreferences.getString("first_name","");
-        String lastName = sharedPreferences.getString("last_name", "");
-        return  firstName + lastName;
-    }
-
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -105,4 +93,26 @@ public class MainActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    public void registerUser(final User user, final Context context) {
+        String input = JsonParser.userInputToJson(APIKEY, user.getFirstName(), user.getLastName());
+
+        Ion.with(context).load(URL)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setStringBody(input)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (result != null) {
+                            Log.d(TAG, result.toString());
+                            saveUserId(result.get("id_user").getAsString());
+
+                        } else {
+                            Log.d(TAG, "no result");
+                        }
+                    }
+                });
+    }
+
 }

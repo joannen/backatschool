@@ -17,7 +17,6 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,7 +35,7 @@ import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
 import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 
-public class ScanActiveBeacon extends AppCompatActivity {
+public class ScanActiveBeacon extends BaseActivity {
 
     private static final long SCAN_PERIOD = 5000;
     public static final String TAG = "LOGTAG";
