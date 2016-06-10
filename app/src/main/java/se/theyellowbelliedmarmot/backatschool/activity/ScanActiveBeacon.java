@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import se.theyellowbelliedmarmot.backatschool.R;
@@ -51,6 +53,7 @@ public class ScanActiveBeacon extends BaseActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private boolean repeat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +155,7 @@ public class ScanActiveBeacon extends BaseActivity {
     private void addBeaconToList(Beacon beacon){
         if (!beacons.contains(beacon)){
             beacons.add(beacon);
+            Collections.sort(beacons, rssiComparator);
             adapter.notifyDataSetChanged();
         }
     }
@@ -179,13 +183,12 @@ public class ScanActiveBeacon extends BaseActivity {
         alertDialog.show();
 
     }
-    // Test this
+
     public void stopScan(MenuItem item) {
         scanBeacon(false);
         Toast.makeText(getApplicationContext(), "Stopped scan for beacons", Toast.LENGTH_SHORT).show();
     }
 
-    //Test this
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -193,4 +196,12 @@ public class ScanActiveBeacon extends BaseActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    Comparator<Beacon> rssiComparator= new Comparator<Beacon>() {
+        @Override
+        public int compare(Beacon beacon, Beacon t1) {
+            return (beacon.getRssi() > t1.getRssi()? -1: (beacon.getRssi() == t1.getRssi() ? 0 : 1));
+        }
+    };
+
 }
