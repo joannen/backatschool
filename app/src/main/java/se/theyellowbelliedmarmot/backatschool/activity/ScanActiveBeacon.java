@@ -53,7 +53,6 @@ public class ScanActiveBeacon extends BaseActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-    private boolean repeat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,8 +198,8 @@ public class ScanActiveBeacon extends BaseActivity {
 
     Comparator<Beacon> rssiComparator= new Comparator<Beacon>() {
         @Override
-        public int compare(Beacon beacon, Beacon t1) {
-            return (beacon.getRssi() > t1.getRssi()? -1: (beacon.getRssi() == t1.getRssi() ? 0 : 1));
+        public int compare(Beacon beaconOne, Beacon beaconTwo) {
+            return (beaconOne.getRssi() > beaconTwo.getRssi()? -1: (beaconOne.getRssi() == beaconTwo.getRssi() ? 0 : 1));
         }
     };
 
