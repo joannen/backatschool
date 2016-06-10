@@ -37,12 +37,12 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
 
     @Override
     public void onBindViewHolder(BeaconAdapter.BeaconViewHolder holder, int position) {
-        holder.uuidView.setText("UUID: " +beacons.get(position).getUuid());
-        holder.majorView.setText("Major: " +beacons.get(position).getMajor());
-        holder.minorView.setText("Minor: " +beacons.get(position).getMinor());
-        holder.nameView.setHint("Name: " + beacons.get(position).getName());
+        holder.uuidView.setText(beacons.get(position).getUuid());
+        holder.majorView.setText(beacons.get(position).getMajor());
+        holder.minorView.setText(beacons.get(position).getMinor());
+        holder.nameView.setHint(beacons.get(position).getName());
 //        holder.rssiView.setText(beacons.get(position).getRssi());
-        holder.rssiView.setText("RSSI: " + String.valueOf(beacons.get(position).getRssi()));
+        holder.rssiView.setText(String.valueOf(beacons.get(position).getRssi()));
 
 
         if (position % 2 == 0) {
@@ -83,6 +83,9 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
             intent.putExtra("uuid", uuidView.getText());
             intent.putExtra("major", majorView.getText());
             intent.putExtra("minor", minorView.getText());
+            intent.putExtra("name", nameView.getText());
+            intent.putExtra("rssi", rssiView.getText());
+            intent.putExtra("has_beacon", true);
             view.getContext().startActivity(intent);
 
         }
