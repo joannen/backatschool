@@ -27,7 +27,6 @@ public class BaseActivity extends AppCompatActivity{
         return  firstName + lastName;
     }
 
-
     protected void saveUser(String firstName, String lastName){
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -48,7 +47,5 @@ public class BaseActivity extends AppCompatActivity{
         String id = sharedPreferences.getString("id", "");
         return id;
     }
-
-
 
 }

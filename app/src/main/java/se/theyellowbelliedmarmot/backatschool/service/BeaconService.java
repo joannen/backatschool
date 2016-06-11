@@ -2,7 +2,6 @@ package se.theyellowbelliedmarmot.backatschool.service;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -40,6 +39,5 @@ public final class BeaconService {
         jsonObject.addProperty("beacon_uuid", beaconUuid);
         return "input="+jsonObject.toString();
     }
-
 
 }

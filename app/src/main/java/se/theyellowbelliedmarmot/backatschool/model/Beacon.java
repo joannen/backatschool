@@ -60,7 +60,6 @@ public final class Beacon implements Comparable<Beacon> {
         if (uuid != null ? !uuid.equals(beacon.uuid) : beacon.uuid != null) return false;
         if (major != null ? !major.equals(beacon.major) : beacon.major != null) return false;
         return minor != null ? minor.equals(beacon.minor) : beacon.minor == null;
-
     }
 
     @Override

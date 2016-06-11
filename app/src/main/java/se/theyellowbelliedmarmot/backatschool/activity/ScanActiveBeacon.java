@@ -25,13 +25,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
@@ -114,12 +112,12 @@ public class ScanActiveBeacon extends BaseActivity {
             Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName());
             addBeaconToList(beacon);
         }
+
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
         }
     };
-
 
     private void scanBeacon(boolean scan) {
         if(scan){
@@ -152,17 +150,23 @@ public class ScanActiveBeacon extends BaseActivity {
     }
 
     private void addBeaconToList(Beacon beacon){
+        //Just to se other beacons temp, not just one. Remove this line later.
+        Beacon b = new Beacon("","","",-90,"");
         if (!beacons.contains(beacon)){
             beacons.add(beacon);
-            Beacon b = new Beacon("","","",-105,"");
+            // Just to se other beacons temp, not just one. Remove this line later.
             beacons.add(b);
+            Collections.sort(beacons, rssiComparator);
+            adapter.notifyDataSetChanged();
+        } else {
+            beacons.remove(beacon);
+            beacons.add(beacon);
             Collections.sort(beacons, rssiComparator);
             adapter.notifyDataSetChanged();
         }
     }
 
     public void subscribeToBeacon(View view){
-
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this).setTitle(getString(R.string.confirm_subscription_alert))
                 .setMessage(getString(R.string.confirm_subscription_text))
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -182,7 +186,6 @@ public class ScanActiveBeacon extends BaseActivity {
                 });
         alertDialog.create();
         alertDialog.show();
-
     }
 
     public void stopScan(MenuItem item) {

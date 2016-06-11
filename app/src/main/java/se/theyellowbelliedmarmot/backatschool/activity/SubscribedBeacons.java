@@ -30,10 +30,8 @@ public class SubscribedBeacons extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscribed_beacons);
 
-
         beaconList = new ArrayList<>();
         beaconService = new BeaconService();
-
 
         if(getIntent().hasExtra("has_beacon")){
             Log.d("has extra", getIntent().getStringExtra("uuid"));
@@ -46,8 +44,6 @@ public class SubscribedBeacons extends BaseActivity {
 
             Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name);
             beaconList.add(beacon);
-
-
         }
         saveBeacon(beaconList);
         readBeacons();

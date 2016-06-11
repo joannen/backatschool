@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.List;
-
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.activity.SubscribedBeacons;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
@@ -43,13 +41,11 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         holder.nameView.setHint(beacons.get(position).getName());
         holder.rssiView.setText(String.valueOf(beacons.get(position).getRssi()));
 
-
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.lightGreen));
         } else {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.lightGray));
         }
-
     }
 
     @Override
@@ -63,7 +59,6 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         public final TextView minorView;
         public final TextView rssiView;
         public final TextView nameView;
-
 
         public BeaconViewHolder(View itemView) {
             super(itemView);

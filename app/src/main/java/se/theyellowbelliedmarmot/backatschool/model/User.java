@@ -41,7 +41,6 @@ public class User {
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null)
             return false;
         return id != null ? id.equals(user.id) : user.id == null;
-
     }
 
     @Override
@@ -50,5 +49,14 @@ public class User {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", id='" + id + '\'' +
+                '}';
     }
 }
