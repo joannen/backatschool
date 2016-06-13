@@ -42,6 +42,7 @@ public class SubscribedBeacons extends BaseActivity {
             String major = getIntent().getStringExtra("major");
             String minor = getIntent().getStringExtra("minor");
             String rssi = getIntent().getStringExtra("rssi");
+            Log.d(TAG, "userid: "+ readUserId());
             subscribeToBeacon(readUserId(),uuid, this );
 
             Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name);
@@ -53,34 +54,9 @@ public class SubscribedBeacons extends BaseActivity {
         readBeacons();
     }
 
-    private void saveBeacon(List<Beacon> beaconList){
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Set<String> jsonBeacons = new HashSet<>();
 
-        for (Beacon  beacon: beaconList) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", beacon.getName());
-            jsonObject.addProperty("uuid", beacon.getUuid());
-            jsonObject.addProperty("major", beacon.getMajor());
-            jsonObject.addProperty("minor", beacon.getMinor());
-            jsonObject.addProperty("rssi", beacon.getRssi());
-            Log.d("JSON AS STRING: " , jsonObject.toString());
-        }
 
-        editor.putStringSet("subscribed_beacons", jsonBeacons);
-        editor.commit();
-    }
 
-    private void readBeacons(){
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
-        Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
-        List<Beacon> beacons = new ArrayList<>();
-        for (String  s: jsonBeacons) {
-            JsonObject json = new JsonObject();
-            Log.d("JSON: ", s);
-        }
-    }
 
     public void subscribeToBeacon(String user_id, String beaconUuid ,Context context) {
         String input = JsonParser.subscriptionInputToJson(APIKEY, user_id, beaconUuid);

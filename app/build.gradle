@@ -16,8 +16,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+        }
     }
+
 }
+
+repositories { jcenter() }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -26,4 +32,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.koushikdutta.ion:ion:2.+'
     compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'org.altbeacon:android-beacon-library:2+'
 }

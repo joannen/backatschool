@@ -104,13 +104,15 @@ public class ScanActiveBeacon extends BaseActivity {
         public void onScanResult(int callbackType, ScanResult result) {
 //            byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData(76);
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
+            if (manufacturerSpecificData.length >10){
+                int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
+                int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
+                String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
 
-            int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
-            int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
-            String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
+                Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName());
+                addBeaconToList(beacon);
+            }
 
-            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName());
-            addBeaconToList(beacon);
         }
         @Override
         public void onScanFailed(int errorCode) {
