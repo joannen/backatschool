@@ -38,7 +38,7 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         holder.uuidView.setText(beacons.get(position).getUuid());
         holder.majorView.setText(beacons.get(position).getMajor());
         holder.minorView.setText(beacons.get(position).getMinor());
-        holder.nameView.setHint(beacons.get(position).getName());
+        holder.nameView.setText(beacons.get(position).getName());
         holder.rssiView.setText(String.valueOf(beacons.get(position).getRssi()));
 
         if (position % 2 == 0) {

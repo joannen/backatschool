@@ -64,11 +64,16 @@ public class BaseActivity extends AppCompatActivity{
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
         List<Beacon> beacons = new ArrayList<>();
-        for (String  s: jsonBeacons) {
-            JsonObject json = new JsonObject();
-            Log.d("JSON: ", s);
-            beacons.add(JsonParser.jsonToBeacon(json));
+        if(jsonBeacons !=null){
+            for (String  s: jsonBeacons) {
+                com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
+
+                JsonObject json = parser.parse(s).getAsJsonObject();
+                Log.d(TAG, json.toString());
+                beacons.add(JsonParser.jsonToBeacon(json));
+            }
         }
+
         return beacons;
     }
 
@@ -85,6 +90,7 @@ public class BaseActivity extends AppCompatActivity{
             jsonObject.addProperty("minor", beacon.getMinor());
             jsonObject.addProperty("rssi", beacon.getRssi());
             Log.d("JSON AS STRING: " , jsonObject.toString());
+            jsonBeacons.add(jsonObject.toString());
         }
 
         editor.putStringSet("subscribed_beacons", jsonBeacons);
