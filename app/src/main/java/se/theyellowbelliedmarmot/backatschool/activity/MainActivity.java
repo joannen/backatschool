@@ -5,14 +5,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.User;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
@@ -30,6 +33,10 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(2000);
+
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "BLE Not Supported",
@@ -79,11 +86,12 @@ public class MainActivity extends BaseActivity {
             authInputBox.show();
         }
         else {
+            Log.d(TAG, "USERID: " + readUserId());
+            Log.d(TAG, "USER: " + readUser());
             Intent intent = new Intent(this, ScanActiveBeacon.class);
             startActivity(intent);
         }
     }
-
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -104,7 +112,9 @@ public class MainActivity extends BaseActivity {
                     public void onCompleted(Exception e, JsonObject result) {
                         if (result != null) {
                             Log.d(TAG, result.toString());
-                            saveUserId(result.get("id_user").getAsString());
+                            Log.d(TAG, "ID_USER: " +result.get("id_user").getAsString());
+                            saveUserId(getApplicationContext() ,result.get("id_user").getAsString());
+
 
                         } else {
                             Log.d(TAG, "no result");

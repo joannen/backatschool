@@ -2,6 +2,8 @@ package se.theyellowbelliedmarmot.backatschool.tools;
 
 import com.google.gson.JsonObject;
 
+import se.theyellowbelliedmarmot.backatschool.model.Beacon;
+
 /**
  * Created by joanne on 10/06/16.
  */
@@ -25,6 +27,18 @@ public final class JsonParser {
         jsonObject.addProperty("beacon_uuid", beaconUuid);
         String inputString = INPUT + jsonObject.toString();
         return inputString;
+    }
+
+    public static Beacon jsonToBeacon(JsonObject jsonObject){
+        Beacon beacon;
+        String name = jsonObject.get("name").getAsString();
+        String major = jsonObject.get("major").getAsString();
+        String minor = jsonObject.get("minor").getAsString();
+        String uuid = jsonObject.get("uuid").getAsString();
+        int rssi = jsonObject.get("rssi").getAsInt();
+
+        beacon = new Beacon(uuid, major,minor, rssi, name);
+        return beacon;
     }
 
 
