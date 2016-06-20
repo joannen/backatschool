@@ -11,9 +11,8 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
@@ -71,16 +70,14 @@ public class SubscribedBeacons extends BaseActivity {
 
         existingBeacons = readBeacons();
 
-        Map<String, String> beaconsToFilter = new HashMap<>();
+        ArrayList<String> beacons = new ArrayList<>();
 
-        for (Beacon  b: existingBeacons)) {
-
-
+        for (Beacon  b: existingBeacons) {
+            beacons.add(JsonParser.beaconToJson(b).toString());
         }
 
-
         Intent intent = new Intent(this, BackgroundScanningService.class);
-        intent.putParcelableArrayListExtra("beacons", )
+        intent.putStringArrayListExtra("beacons", beacons);
         startService(intent);
 
 

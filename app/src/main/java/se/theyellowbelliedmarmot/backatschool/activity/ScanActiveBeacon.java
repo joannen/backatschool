@@ -9,27 +9,26 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
@@ -166,28 +165,6 @@ public class ScanActiveBeacon extends BaseActivity {
             Collections.sort(beacons, rssiComparator);
             adapter.notifyDataSetChanged();
         }
-    }
-
-    public void subscribeToBeacon(View view){
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this).setTitle(getString(R.string.confirm_subscription_alert))
-                .setMessage(getString(R.string.confirm_subscription_text))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getApplicationContext(), "Added subscrpition", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getApplicationContext(), "Nope", Toast.LENGTH_LONG).show();
-                        dialogInterface.cancel();
-                        dialogInterface.dismiss();
-                        finish();
-                    }
-                });
-        alertDialog.create();
-        alertDialog.show();
     }
 
     public void stopScan(MenuItem item) {

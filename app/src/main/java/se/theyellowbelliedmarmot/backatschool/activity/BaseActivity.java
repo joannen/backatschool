@@ -75,8 +75,9 @@ public class BaseActivity extends AppCompatActivity{
         Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
         List<Beacon> beacons = new ArrayList<>();
         if(jsonBeacons !=null){
+            com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
+
             for (String  s: jsonBeacons) {
-                com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
 
                 JsonObject json = parser.parse(s).getAsJsonObject();
                 Log.d(TAG, json.toString());
