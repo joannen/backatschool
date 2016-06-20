@@ -109,4 +109,21 @@ public class BaseActivity extends AppCompatActivity{
         editor.commit();
     }
 
+    protected void saveDeviceAddress(List<String> deviceAddresses) {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("devices", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> devices = new HashSet<>();
+        for (String s : deviceAddresses) {
+            devices.add(s);
+        }
+        editor.putStringSet("devices",devices);
+        editor.commit();
+    }
+
+    protected List<String> readDeviceAddresses(){
+        SharedPreferences sharedPreferences = this.getSharedPreferences("devices", Context.MODE_PRIVATE);
+        Set<String> devices =sharedPreferences.getStringSet("devices", null);
+        return devices== null?new ArrayList<String>():new ArrayList<>(devices);
+    }
+
 }

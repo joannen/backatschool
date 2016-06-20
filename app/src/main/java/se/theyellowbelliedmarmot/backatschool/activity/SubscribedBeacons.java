@@ -24,6 +24,7 @@ import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 public class SubscribedBeacons extends BaseActivity {
 
     List<Beacon> existingBeacons;
+    List<String> devices;
     BeaconService beaconService;
     private static final String URL = "http://beacons.zenzor.io/sys/api/subscribe_beacon";
 
@@ -36,9 +37,14 @@ public class SubscribedBeacons extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscribed_beacons);
 
+        //get subscribed beacons from shared preferences
         existingBeacons = readBeacons();
-        for (Beacon  b: existingBeacons) {
-            Log.d(TAG, b.toString());
+
+        if(readDeviceAddresses()==null){
+            devices = new ArrayList<>();
+        }else{
+            devices = readDeviceAddresses();
+
         }
 
         beaconService = new BeaconService();
@@ -49,6 +55,7 @@ public class SubscribedBeacons extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        //check if user clicked on new beacon and save that beacon in shared pref
         if(getIntent().hasExtra("has_beacon")){
             Log.d("has extra", getIntent().getStringExtra("uuid"));
             String name = getIntent().getStringExtra("name");
@@ -56,30 +63,29 @@ public class SubscribedBeacons extends BaseActivity {
             String major = getIntent().getStringExtra("major");
             String minor = getIntent().getStringExtra("minor");
             String rssi = getIntent().getStringExtra("rssi");
+            String deviceAddress = getIntent().getStringExtra("deviceAddress");
             Log.d(TAG, "userid: "+ readUserId());
             subscribeToBeacon(readUserId(),uuid, this );
 
-            Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name);
+            Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name, deviceAddress);
+            //add to recycler view
             addBeaconToSubscriptionList(beacon);
+            //add to shared pref
             saveBeacon(existingBeacons);
+            //save device address for background scanning
+            devices.add(beacon.getDeviceAddress());
+            saveDeviceAddress(devices);
 
         }else {
+            //just update recyclerview
             adapter.notifyDataSetChanged();
-
         }
 
+        //get all beacons from shared pref
         existingBeacons = readBeacons();
 
-        ArrayList<String> beacons = new ArrayList<>();
-
-        for (Beacon  b: existingBeacons) {
-            beacons.add(JsonParser.beaconToJson(b).toString());
-        }
-
         Intent intent = new Intent(this, BackgroundScanningService.class);
-        intent.putStringArrayListExtra("beacons", beacons);
         startService(intent);
-
 
     }
 
@@ -106,4 +112,6 @@ public class SubscribedBeacons extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     }
+
+
 }

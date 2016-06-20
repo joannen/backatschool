@@ -107,8 +107,9 @@ public class ScanActiveBeacon extends BaseActivity {
                 int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
                 int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
                 String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
+                String deviceAddress = result.getDevice().getAddress();
 
-                Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName());
+                Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
                 addBeaconToList(beacon);
             }
 
@@ -152,7 +153,7 @@ public class ScanActiveBeacon extends BaseActivity {
 
     private void addBeaconToList(Beacon beacon){
         //Just to se other beacons temp, not just one. Remove this line later.
-        Beacon b = new Beacon("","","",-90,"");
+        Beacon b = new Beacon("","","",-90,"", "2");
         if (!beacons.contains(beacon)){
             beacons.add(beacon);
             // Just to se other beacons temp, not just one. Remove this line later.

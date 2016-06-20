@@ -36,8 +36,9 @@ public final class JsonParser {
         String minor = jsonObject.get("minor").getAsString();
         String uuid = jsonObject.get("uuid").getAsString();
         int rssi = jsonObject.get("rssi").getAsInt();
+        String deviceAddress = jsonObject.get("device_address").getAsString();
 
-        beacon = new Beacon(uuid, major,minor, rssi, name);
+        beacon = new Beacon(uuid, major,minor, rssi, name, deviceAddress);
         return beacon;
     }
 
@@ -49,6 +50,7 @@ public final class JsonParser {
         jsonObject.addProperty("major", beacon.getMajor());
         jsonObject.addProperty("minor", beacon.getMinor());
         jsonObject.addProperty("rssi", beacon.getRssi());
+        jsonObject.addProperty("device_address", beacon.getDeviceAddress());
         return jsonObject;
 
     }

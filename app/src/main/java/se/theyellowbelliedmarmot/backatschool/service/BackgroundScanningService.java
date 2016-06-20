@@ -14,13 +14,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import se.theyellowbelliedmarmot.backatschool.model.Beacon;
-import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
+import java.util.Set;
 
 /**
  * Created by joanne on 13/06/16.
@@ -34,7 +30,7 @@ public class BackgroundScanningService extends Service {
     private ScanSettings scanSettings;
     private List<ScanFilter> scanFilters;
     private BluetoothLeScanner scanner;
-    private List<Beacon> subscribedBeacons;
+    private List<String> subscribedBeacons;
 
 
 
@@ -47,16 +43,22 @@ public class BackgroundScanningService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        subscribedBeacons = new ArrayList<>();
-        com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
+//
+//        if(getApplicationContext().getSystemService())
+//        subscribedBeacons = new ArrayList<>();
+//        com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
+//
+//        for (String  s: intent.getStringArrayListExtra("beacons")) {
+//            JsonObject json = parser.parse(s).getAsJsonObject();
+//            subscribedBeacons.add(JsonParser.jsonToBeacon(json));
+//            Log.d(TAG, s);
+//        }
+        Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
+        subscribedBeacons = new ArrayList<>(set);
 
-        for (String  s: intent.getStringArrayListExtra("beacons")) {
-            JsonObject json = parser.parse(s).getAsJsonObject();
-            subscribedBeacons.add(JsonParser.jsonToBeacon(json));
-            Log.d(TAG, s);
-        }
 
-         scanner.startScan(scanFilters, scanSettings, scanCallback);
+        setUpFilters(subscribedBeacons);
+        scanner.startScan(scanFilters, scanSettings, scanCallback);
 
         return START_STICKY;
     }
@@ -86,9 +88,12 @@ public class BackgroundScanningService extends Service {
 
     }
 
-    private void setUpFilters(){
+    private void setUpFilters(List<String> beaconList){
         scanFilters = new ArrayList<>();
-
+        for (String  b: beaconList) {
+            ScanFilter filter = new ScanFilter.Builder().setDeviceAddress(b).build();
+            scanFilters.add(filter);
+        }
     }
 
 
