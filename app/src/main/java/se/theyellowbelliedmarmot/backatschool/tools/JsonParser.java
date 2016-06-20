@@ -41,5 +41,17 @@ public final class JsonParser {
         return beacon;
     }
 
+    public static JsonObject beaconToJson(Beacon beacon){
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name", beacon.getName());
+        jsonObject.addProperty("uuid", beacon.getUuid());
+        jsonObject.addProperty("major", beacon.getMajor());
+        jsonObject.addProperty("minor", beacon.getMinor());
+        jsonObject.addProperty("rssi", beacon.getRssi());
+        return jsonObject;
+
+    }
+
 
 }

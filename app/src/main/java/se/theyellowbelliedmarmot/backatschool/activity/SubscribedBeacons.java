@@ -1,6 +1,7 @@
 package se.theyellowbelliedmarmot.backatschool.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,27 +11,26 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
+import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
 import se.theyellowbelliedmarmot.backatschool.service.BeaconService;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
 public class SubscribedBeacons extends BaseActivity {
 
     List<Beacon> existingBeacons;
-    List<Beacon> newBeaconList;
     BeaconService beaconService;
     private static final String URL = "http://beacons.zenzor.io/sys/api/subscribe_beacon";
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,6 @@ public class SubscribedBeacons extends BaseActivity {
         adapter = new BeaconAdapter(this, existingBeacons);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
 
         if(getIntent().hasExtra("has_beacon")){
             Log.d("has extra", getIntent().getStringExtra("uuid"));
@@ -71,6 +70,18 @@ public class SubscribedBeacons extends BaseActivity {
         }
 
         existingBeacons = readBeacons();
+
+        Map<String, String> beaconsToFilter = new HashMap<>();
+
+        for (Beacon  b: existingBeacons)) {
+
+
+        }
+
+
+        Intent intent = new Intent(this, BackgroundScanningService.class);
+        intent.putParcelableArrayListExtra("beacons", )
+        startService(intent);
 
 
     }
@@ -98,5 +109,4 @@ public class SubscribedBeacons extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     }
-
 }

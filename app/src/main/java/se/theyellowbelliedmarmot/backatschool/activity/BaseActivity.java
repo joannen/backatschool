@@ -93,12 +93,13 @@ public class BaseActivity extends AppCompatActivity{
         Set<String> jsonBeacons = new HashSet<>();
 
         for (Beacon  beacon: beaconList) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", beacon.getName());
-            jsonObject.addProperty("uuid", beacon.getUuid());
-            jsonObject.addProperty("major", beacon.getMajor());
-            jsonObject.addProperty("minor", beacon.getMinor());
-            jsonObject.addProperty("rssi", beacon.getRssi());
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("name", beacon.getName());
+//            jsonObject.addProperty("uuid", beacon.getUuid());
+//            jsonObject.addProperty("major", beacon.getMajor());
+//            jsonObject.addProperty("minor", beacon.getMinor());
+//            jsonObject.addProperty("rssi", beacon.getRssi());
+            JsonObject jsonObject = JsonParser.beaconToJson(beacon);
             Log.d("JSON AS STRING: " , jsonObject.toString());
             jsonBeacons.add(jsonObject.toString());
         }
