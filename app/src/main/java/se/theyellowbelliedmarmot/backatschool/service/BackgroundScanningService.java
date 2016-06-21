@@ -17,6 +17,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by joanne on 13/06/16.
@@ -24,15 +25,13 @@ import java.util.Set;
 public class BackgroundScanningService extends Service {
 
     private static final String TAG = "BACKGROUNDSCANNING";
-    private static final String NAME = "BACKGROUNDSERVICE";
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
     private ScanSettings scanSettings;
     private List<ScanFilter> scanFilters;
     private BluetoothLeScanner scanner;
     private List<String> subscribedBeacons;
-
-
+    private AtomicBoolean inRange;
 
 
     @Nullable
@@ -43,6 +42,7 @@ public class BackgroundScanningService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        inRange = new AtomicBoolean();
 //
 //        if(getApplicationContext().getSystemService())
 //        subscribedBeacons = new ArrayList<>();
@@ -55,8 +55,6 @@ public class BackgroundScanningService extends Service {
 //        }
         Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
         subscribedBeacons = new ArrayList<>(set);
-
-
         setUpFilters(subscribedBeacons);
         scanner.startScan(scanFilters, scanSettings, scanCallback);
 
@@ -74,7 +72,28 @@ public class BackgroundScanningService extends Service {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             Log.d(TAG, String.valueOf(result));
+            Log.d(TAG, String.valueOf(inRange));
+            Range range = checkRSSI(result.getRssi());
+            switch (range){
+                case IN:
+                    if(!inRange.get()){
+                        inRange.set(true);
+                        Log.d(TAG, "IN RANGE");
+                    }else {
+                        Log.d(TAG, "IN RANGE BUT DOING NOTHING");
+                    }
 
+                    break;
+                case OUT:
+                    if(inRange.get()){
+                        inRange.set(false);
+                        Log.d(TAG, "OUT OF RANGE");
+                    }else {
+                        Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
+                    }
+                    break;
+                default:Log.d(TAG, "UNCLEAR");
+            }
         }
     };
 
@@ -85,7 +104,6 @@ public class BackgroundScanningService extends Service {
         scanSettings = new ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
                 .build();
-
     }
 
     private void setUpFilters(List<String> beaconList){
@@ -96,5 +114,11 @@ public class BackgroundScanningService extends Service {
         }
     }
 
-
+    private Range checkRSSI(int rssi){
+        if(rssi<= -25&&rssi >=-45){
+            return Range.IN;
+        }else if(rssi < -70){
+            return Range.OUT;
+        }return Range.UNCLEAR;
+    }
 }

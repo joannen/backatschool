@@ -17,7 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +37,7 @@ public class ScanActiveBeacon extends BaseActivity {
 
     private static final long SCAN_PERIOD = 5000;
     public static final String TAG = "LOGTAG";
+    public static final String BEACON_NAME = "closebeacon.com";
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION =0 ;
     private BluetoothLeScanner scanner;
@@ -72,7 +72,7 @@ public class ScanActiveBeacon extends BaseActivity {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();
         scanFilters = new ArrayList<>();
-        ScanFilter filter = new ScanFilter.Builder().setDeviceName("closebeacon.com").build();
+        ScanFilter filter = new ScanFilter.Builder().setDeviceName(BEACON_NAME).build();
         scanFilters.add(filter);
     }
 
@@ -91,9 +91,6 @@ public class ScanActiveBeacon extends BaseActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-        }else {
-            //TOAST???????
-            Log.d(TAG, "PERMISSION WAS GRANTED");
         }
         scanBeacon(true);
     }
@@ -102,13 +99,14 @@ public class ScanActiveBeacon extends BaseActivity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
 //            byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData(76);
+            String deviceName = result.getDevice().getName();
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
+            //if lenght > 10, beacon is active
             if (manufacturerSpecificData.length >10){
                 int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
                 int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
                 String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
                 String deviceAddress = result.getDevice().getAddress();
-
                 Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
                 addBeaconToList(beacon);
             }
@@ -152,20 +150,23 @@ public class ScanActiveBeacon extends BaseActivity {
     }
 
     private void addBeaconToList(Beacon beacon){
-        //Just to se other beacons temp, not just one. Remove this line later.
-        Beacon b = new Beacon("","","",-90,"", "2");
-        if (!beacons.contains(beacon)){
-            beacons.add(beacon);
-            // Just to se other beacons temp, not just one. Remove this line later.
-            beacons.add(b);
-            Collections.sort(beacons, rssiComparator);
-            adapter.notifyDataSetChanged();
-        } else {
+
+//        if (!beacons.contains(beacon)){
+//            beacons.add(beacon);
+//            Collections.sort(beacons, rssiComparator);
+//            adapter.notifyDataSetChanged();
+//        } else {
+//            beacons.remove(beacon);
+//            beacons.add(beacon);
+//            Collections.sort(beacons, rssiComparator);
+//            adapter.notifyDataSetChanged();
+//        }
+        if(beacons.contains(beacon)){
             beacons.remove(beacon);
-            beacons.add(beacon);
-            Collections.sort(beacons, rssiComparator);
-            adapter.notifyDataSetChanged();
         }
+        beacons.add(beacon);
+        Collections.sort(beacons, rssiComparator);
+        adapter.notifyDataSetChanged();
     }
 
     public void stopScan(MenuItem item) {

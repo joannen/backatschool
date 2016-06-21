@@ -18,16 +18,13 @@ import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
 import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
-import se.theyellowbelliedmarmot.backatschool.service.BeaconService;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
 public class SubscribedBeacons extends BaseActivity {
 
     List<Beacon> existingBeacons;
     List<String> devices;
-    BeaconService beaconService;
     private static final String URL = "http://beacons.zenzor.io/sys/api/subscribe_beacon";
-
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
@@ -44,10 +41,7 @@ public class SubscribedBeacons extends BaseActivity {
             devices = new ArrayList<>();
         }else{
             devices = readDeviceAddresses();
-
         }
-
-        beaconService = new BeaconService();
 
         recyclerView = (RecyclerView) findViewById(R.id.subscribed_beacon_list);
         layoutManager = new LinearLayoutManager(this);
@@ -72,7 +66,7 @@ public class SubscribedBeacons extends BaseActivity {
             addBeaconToSubscriptionList(beacon);
             //add to shared pref
             saveBeacon(existingBeacons);
-            //save device address for background scanning
+            //save deviceaddress in shared pref for background scanning
             devices.add(beacon.getDeviceAddress());
             saveDeviceAddress(devices);
 
@@ -80,13 +74,11 @@ public class SubscribedBeacons extends BaseActivity {
             //just update recyclerview
             adapter.notifyDataSetChanged();
         }
-
         //get all beacons from shared pref
-        existingBeacons = readBeacons();
+//        existingBeacons = readBeacons();
 
         Intent intent = new Intent(this, BackgroundScanningService.class);
         startService(intent);
-
     }
 
     public void subscribeToBeacon(String user_id, String beaconUuid ,Context context) {
@@ -112,6 +104,4 @@ public class SubscribedBeacons extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     }
-
-
 }

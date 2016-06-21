@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.EditText;
@@ -33,10 +32,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(2000);
-
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "BLE Not Supported",
@@ -92,6 +87,7 @@ public class MainActivity extends BaseActivity {
             startActivity(intent);
         }
     }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -114,7 +110,6 @@ public class MainActivity extends BaseActivity {
                             Log.d(TAG, result.toString());
                             Log.d(TAG, "ID_USER: " +result.get("id_user").getAsString());
                             saveUserId(getApplicationContext() ,result.get("id_user").getAsString());
-
 
                         } else {
                             Log.d(TAG, "no result");

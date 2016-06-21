@@ -28,7 +28,6 @@ public class BaseActivity extends AppCompatActivity{
     public static final String TAG = "LOGTAG";
     protected static final String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
 
-
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
@@ -47,7 +46,6 @@ public class BaseActivity extends AppCompatActivity{
         String lastName = sharedPreferences.getString("last_name", "");
         return  firstName + lastName;
     }
-
 
     protected void saveUser(String firstName, String lastName){
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
@@ -94,12 +92,6 @@ public class BaseActivity extends AppCompatActivity{
         Set<String> jsonBeacons = new HashSet<>();
 
         for (Beacon  beacon: beaconList) {
-//            JsonObject jsonObject = new JsonObject();
-//            jsonObject.addProperty("name", beacon.getName());
-//            jsonObject.addProperty("uuid", beacon.getUuid());
-//            jsonObject.addProperty("major", beacon.getMajor());
-//            jsonObject.addProperty("minor", beacon.getMinor());
-//            jsonObject.addProperty("rssi", beacon.getRssi());
             JsonObject jsonObject = JsonParser.beaconToJson(beacon);
             Log.d("JSON AS STRING: " , jsonObject.toString());
             jsonBeacons.add(jsonObject.toString());
@@ -125,5 +117,4 @@ public class BaseActivity extends AppCompatActivity{
         Set<String> devices =sharedPreferences.getStringSet("devices", null);
         return devices== null?new ArrayList<String>():new ArrayList<>(devices);
     }
-
 }
