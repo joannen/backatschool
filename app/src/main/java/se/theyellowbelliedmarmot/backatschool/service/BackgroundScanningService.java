@@ -15,9 +15,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import se.theyellowbelliedmarmot.backatschool.model.Beacon;
+import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
+import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 
 /**
  * Created by joanne on 13/06/16.
@@ -25,6 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BackgroundScanningService extends Service {
 
     private static final String TAG = "BACKGROUNDSCANNING";
+    protected static final String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
+
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter bluetoothAdapter;
     private ScanSettings scanSettings;
@@ -32,6 +39,7 @@ public class BackgroundScanningService extends Service {
     private BluetoothLeScanner scanner;
     private List<String> subscribedBeacons;
     private AtomicBoolean inRange;
+    private String userId;
 
 
     @Nullable
@@ -43,16 +51,7 @@ public class BackgroundScanningService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         inRange = new AtomicBoolean();
-//
-//        if(getApplicationContext().getSystemService())
-//        subscribedBeacons = new ArrayList<>();
-//        com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
-//
-//        for (String  s: intent.getStringArrayListExtra("beacons")) {
-//            JsonObject json = parser.parse(s).getAsJsonObject();
-//            subscribedBeacons.add(JsonParser.jsonToBeacon(json));
-//            Log.d(TAG, s);
-//        }
+
         Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
         subscribedBeacons = new ArrayList<>(set);
         setUpFilters(subscribedBeacons);
@@ -63,37 +62,74 @@ public class BackgroundScanningService extends Service {
 
     @Override
     public void onCreate() {
-
         setUpScan();
-
+        userId = getSharedPreferences("id",Context.MODE_PRIVATE).getString("id", "");
     }
 
     private ScanCallback scanCallback = new ScanCallback() {
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            super.onScanFailed(errorCode);
+            Log.d(TAG, "FAILED");
+        }
+
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
+
+            if(result== null){
+                Log.d(TAG, "RESULT NULL");
+            }
+
             Log.d(TAG, String.valueOf(result));
             Log.d(TAG, String.valueOf(inRange));
             Range range = checkRSSI(result.getRssi());
+            byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
+//            int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
+//            int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
+//            String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
+//            String deviceAddress = result.getDevice().getAddress();
+//            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
+
             switch (range){
                 case IN:
                     if(!inRange.get()){
                         inRange.set(true);
                         Log.d(TAG, "IN RANGE");
+                        if(manufacturerSpecificData.length>10){
+                            int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
+                            int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
+                            String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
+                            String deviceAddress = result.getDevice().getAddress();
+                            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
+                            PresenceDetectionService.inRangeDetected(APIKEY,new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
+
+                        }
                     }else {
                         Log.d(TAG, "IN RANGE BUT DOING NOTHING");
                     }
-
                     break;
                 case OUT:
                     if(inRange.get()){
                         inRange.set(false);
-                        Log.d(TAG, "OUT OF RANGE");
+                        if(manufacturerSpecificData.length>10){
+                            int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
+                            int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
+                            String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
+                            String deviceAddress = result.getDevice().getAddress();
+                            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
+                            PresenceDetectionService.outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
+                            Log.d(TAG, "OUT OF RANGE");
+                        }
+
                     }else {
                         Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
                     }
                     break;
                 default:Log.d(TAG, "UNCLEAR");
             }
+
+
         }
     };
 
@@ -117,8 +153,10 @@ public class BackgroundScanningService extends Service {
     private Range checkRSSI(int rssi){
         if(rssi<= -25&&rssi >=-45){
             return Range.IN;
-        }else if(rssi < -70){
-            return Range.OUT;
-        }return Range.UNCLEAR;
+        }else return Range.OUT;
     }
+
+
+
+
 }

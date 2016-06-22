@@ -62,11 +62,11 @@ public class SubscribedBeacons extends BaseActivity {
             subscribeToBeacon(readUserId(),uuid, this );
 
             Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name, deviceAddress);
-            //add to recycler view
+            //add beacon to recycler view
             addBeaconToSubscriptionList(beacon);
-            //add to shared pref
+            //add beacon to shared pref
             saveBeacon(existingBeacons);
-            //save deviceaddress in shared pref for background scanning
+            //save deviceaddress in shared pref for background scanning service
             devices.add(beacon.getDeviceAddress());
             saveDeviceAddress(devices);
 

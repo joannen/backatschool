@@ -3,6 +3,8 @@ package se.theyellowbelliedmarmot.backatschool.tools;
 import com.google.gson.JsonObject;
 
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
+import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
+import se.theyellowbelliedmarmot.backatschool.service.Range;
 
 /**
  * Created by joanne on 10/06/16.
@@ -52,6 +54,25 @@ public final class JsonParser {
         jsonObject.addProperty("rssi", beacon.getRssi());
         jsonObject.addProperty("device_address", beacon.getDeviceAddress());
         return jsonObject;
+
+    }
+
+    public static String detectionInputToJson(String apikey, ScanResponse scanResponse){
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("api_key", apikey);
+        jsonObject.addProperty("id_user", scanResponse.getUserId());
+        jsonObject.addProperty("beacon_uuid",scanResponse.getBeacon().getUuid());
+
+        if(scanResponse.getRange().equals(Range.IN)){
+            jsonObject.addProperty("major", scanResponse.getBeacon().getMajor());
+            jsonObject.addProperty("minor", scanResponse.getBeacon().getMinor());
+            jsonObject.addProperty("rssi", scanResponse.getBeacon().getRssi());
+        }
+
+        jsonObject.addProperty("timestamp", scanResponse.getTimestamp());
+
+
+        return INPUT+jsonObject.toString();
 
     }
 
