@@ -39,6 +39,7 @@ public class ScanActiveBeacon extends BaseActivity {
 
     private static final long SCAN_PERIOD = 5000;
     public static final String TAG = "LOGTAG";
+    public static final String BEACON_NAME = "closebeacon.com";
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION =0 ;
     private BluetoothLeScanner scanner;
@@ -56,6 +57,7 @@ public class ScanActiveBeacon extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_active_beacon);
+        setTitle(R.string.beacon_scan);
 
         handler = new Handler();
         beacons = new ArrayList<>();
@@ -73,7 +75,7 @@ public class ScanActiveBeacon extends BaseActivity {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();
         scanFilters = new ArrayList<>();
-        ScanFilter filter = new ScanFilter.Builder().setDeviceName("closebeacon.com").build();
+        ScanFilter filter = new ScanFilter.Builder().setDeviceName(BEACON_NAME).build();
         scanFilters.add(filter);
     }
 
@@ -92,9 +94,6 @@ public class ScanActiveBeacon extends BaseActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-        }else {
-            //TOAST???????
-            Log.d(TAG, "PERMISSION WAS GRANTED");
         }
         scanBeacon(true);
     }
@@ -102,17 +101,18 @@ public class ScanActiveBeacon extends BaseActivity {
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-//            byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData(76);
+//         //            byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData(76);
+            String deviceName = result.getDevice().getName();
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
+            //if lenght > 10, beacon is active
             if (manufacturerSpecificData.length >10){
                 int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
                 int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
                 String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
-
-                Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName());
+                String deviceAddress = result.getDevice().getAddress();
+                Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
                 addBeaconToList(beacon);
             }
-
         }
 
         @Override
@@ -153,41 +153,12 @@ public class ScanActiveBeacon extends BaseActivity {
 
     private void addBeaconToList(Beacon beacon){
         //Just to se other beacons temp, not just one. Remove this line later.
-        Beacon b = new Beacon("","","",-90,"");
-        if (!beacons.contains(beacon)){
-            beacons.add(beacon);
-            // Just to se other beacons temp, not just one. Remove this line later.
-            beacons.add(b);
-            Collections.sort(beacons, rssiComparator);
-            adapter.notifyDataSetChanged();
-        } else {
+        if(beacons.contains(beacon)){
             beacons.remove(beacon);
-            beacons.add(beacon);
-            Collections.sort(beacons, rssiComparator);
-            adapter.notifyDataSetChanged();
         }
-    }
-
-    public void subscribeToBeacon(View view){
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this).setTitle(getString(R.string.confirm_subscription_alert))
-                .setMessage(getString(R.string.confirm_subscription_text))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getApplicationContext(), "Added subscrpition", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getApplicationContext(), "Nope", Toast.LENGTH_LONG).show();
-                        dialogInterface.cancel();
-                        dialogInterface.dismiss();
-                        finish();
-                    }
-                });
-        alertDialog.create();
-        alertDialog.show();
+        beacons.add(beacon);
+        Collections.sort(beacons, rssiComparator);
+        adapter.notifyDataSetChanged();
     }
 
     public void stopScan(MenuItem item) {

@@ -1,6 +1,7 @@
 package se.theyellowbelliedmarmot.backatschool.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.gson.JsonObject;
 
@@ -19,7 +21,6 @@ import java.util.Set;
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
-
 /**
  * Created by joanne on 10/06/16.
  */
@@ -27,7 +28,6 @@ public class BaseActivity extends AppCompatActivity{
 
     public static final String TAG = "LOGTAG";
     protected static final String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
-
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
@@ -47,7 +47,6 @@ public class BaseActivity extends AppCompatActivity{
         String lastName = sharedPreferences.getString("last_name", "");
         return  firstName + lastName;
     }
-
 
     protected void saveUser(String firstName, String lastName){
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
@@ -75,8 +74,9 @@ public class BaseActivity extends AppCompatActivity{
         Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
         List<Beacon> beacons = new ArrayList<>();
         if(jsonBeacons !=null){
+            com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
+
             for (String  s: jsonBeacons) {
-                com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
 
                 JsonObject json = parser.parse(s).getAsJsonObject();
                 Log.d(TAG, json.toString());
@@ -93,18 +93,39 @@ public class BaseActivity extends AppCompatActivity{
         Set<String> jsonBeacons = new HashSet<>();
 
         for (Beacon  beacon: beaconList) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", beacon.getName());
-            jsonObject.addProperty("uuid", beacon.getUuid());
-            jsonObject.addProperty("major", beacon.getMajor());
-            jsonObject.addProperty("minor", beacon.getMinor());
-            jsonObject.addProperty("rssi", beacon.getRssi());
+            JsonObject jsonObject = JsonParser.beaconToJson(beacon);
             Log.d("JSON AS STRING: " , jsonObject.toString());
             jsonBeacons.add(jsonObject.toString());
         }
-
         editor.putStringSet("subscribed_beacons", jsonBeacons);
         editor.commit();
+    }
+
+    public void startScanActivity(MenuItem item) {
+        Intent intent = new Intent(this, ScanActiveBeacon.class);
+        startActivity(intent);
+    }
+
+    public void startSubscriptionListActivity(MenuItem item){
+        Intent intent = new Intent(this, SubscribedBeacons.class);
+        startActivity(intent);
+    }
+
+    protected void saveDeviceAddress(List<String> deviceAddresses) {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("devices", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> devices = new HashSet<>();
+        for (String s : deviceAddresses) {
+            devices.add(s);
+        }
+        editor.putStringSet("devices",devices);
+        editor.commit();
+    }
+
+    protected List<String> readDeviceAddresses(){
+        SharedPreferences sharedPreferences = this.getSharedPreferences("devices", Context.MODE_PRIVATE);
+        Set<String> devices =sharedPreferences.getStringSet("devices", null);
+        return devices== null?new ArrayList<String>():new ArrayList<>(devices);
     }
 
 }

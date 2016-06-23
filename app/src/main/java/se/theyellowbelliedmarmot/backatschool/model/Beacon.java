@@ -10,13 +10,15 @@ public final class Beacon implements Comparable<Beacon> {
     private String minor;
     private int rssi;
     private String name;
+    private String deviceAddress;
 
-    public Beacon(String uuid, String major, String minor, int rssi, String name) {
+    public Beacon(String uuid, String major, String minor, int rssi, String name, String deviceAddress) {
         this.uuid = uuid;
         this.major = major;
         this.minor = minor;
         this.rssi = rssi;
         this.name = name;
+        this.deviceAddress = deviceAddress;
     }
 
     public String getName() {
@@ -37,6 +39,10 @@ public final class Beacon implements Comparable<Beacon> {
 
     public int getRssi() {
         return rssi;
+    }
+
+    public String getDeviceAddress() {
+        return deviceAddress;
     }
 
     @Override

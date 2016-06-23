@@ -14,7 +14,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
-        android:name=".application.ScanningApplication"
         android:allowBackup="true"
         android:icon="@mipmap/school"
         android:label="@string/app_name"
@@ -31,7 +30,9 @@
         </activity>
         <activity android:name=".activity.ScanActiveBeacon" />
         <activity android:name=".activity.SubscribedBeacons" />
-        <activity android:name=".activity.BackgroundActivity"></activity>
+        <service android:name=".service.BackgroundScanningService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

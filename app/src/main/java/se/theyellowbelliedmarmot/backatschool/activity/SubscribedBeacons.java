@@ -1,48 +1,51 @@
 package se.theyellowbelliedmarmot.backatschool.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
+import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
 import se.theyellowbelliedmarmot.backatschool.service.BeaconService;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
 public class SubscribedBeacons extends BaseActivity {
 
     List<Beacon> existingBeacons;
-    List<Beacon> newBeaconList;
-    BeaconService beaconService;
+    List<String> devices;
     private static final String URL = "http://beacons.zenzor.io/sys/api/subscribe_beacon";
-
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscribed_beacons);
+        setTitle(R.string.subscribed_beacons);
 
         existingBeacons = readBeacons();
-        for (Beacon  b: existingBeacons) {
-            Log.d(TAG, b.toString());
-        }
 
-        beaconService = new BeaconService();
+        if(readDeviceAddresses()==null){
+            devices = new ArrayList<>();
+        }else{
+            devices = readDeviceAddresses();
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.subscribed_beacon_list);
         layoutManager = new LinearLayoutManager(this);
@@ -50,7 +53,7 @@ public class SubscribedBeacons extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-
+        //check if user clicked on new beacon and save that beacon in shared pref
         if(getIntent().hasExtra("has_beacon")){
             Log.d("has extra", getIntent().getStringExtra("uuid"));
             String name = getIntent().getStringExtra("name");
@@ -58,21 +61,28 @@ public class SubscribedBeacons extends BaseActivity {
             String major = getIntent().getStringExtra("major");
             String minor = getIntent().getStringExtra("minor");
             String rssi = getIntent().getStringExtra("rssi");
+            String deviceAddress = getIntent().getStringExtra("deviceAddress");
             Log.d(TAG, "userid: "+ readUserId());
             subscribeToBeacon(readUserId(),uuid, this );
 
-            Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name);
+            Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name, deviceAddress);
+            //add beacon to recycler view
             addBeaconToSubscriptionList(beacon);
+            //add beacon to shared pref
             saveBeacon(existingBeacons);
+            //save deviceaddress in shared pref for background scanning service
+            devices.add(beacon.getDeviceAddress());
+            saveDeviceAddress(devices);
 
         }else {
+            //just update recyclerview
             adapter.notifyDataSetChanged();
-
         }
+        //get all beacons from shared pref
+//        existingBeacons = readBeacons();
 
-        existingBeacons = readBeacons();
-
-
+        Intent intent = new Intent(this, BackgroundScanningService.class);
+        startService(intent);
     }
 
     public void subscribeToBeacon(String user_id, String beaconUuid ,Context context) {
@@ -98,5 +108,17 @@ public class SubscribedBeacons extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.beacon_settings, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void beaconSettings(MenuItem item) {
+        Toast.makeText(getApplicationContext(), "Change beacon name", Toast.LENGTH_SHORT).show();
+    }
+
 
 }

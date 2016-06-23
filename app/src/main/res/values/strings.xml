@@ -2,5 +2,7 @@
     <string name="app_name">Back At School</string>
     <string name="confirm_subscription_alert">Confirm subscription</string>
     <string name="confirm_subscription_text">Do you want to subscribe to this beacon?</string>
+    <string name="subscribed_beacons">Subscribed Beacons</string>
+    <string name="beacon_scan">Beacon Scan</string>
 
 </resources>

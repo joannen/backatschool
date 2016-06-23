@@ -9,8 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.List;
 import se.theyellowbelliedmarmot.backatschool.R;
+import se.theyellowbelliedmarmot.backatschool.activity.ScanActiveBeacon;
 import se.theyellowbelliedmarmot.backatschool.activity.SubscribedBeacons;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 
@@ -40,6 +43,7 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         holder.minorView.setText(beacons.get(position).getMinor());
         holder.nameView.setText(beacons.get(position).getName());
         holder.rssiView.setText(String.valueOf(beacons.get(position).getRssi()));
+        holder.addressView.setText(beacons.get(position).getDeviceAddress());
 
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.lightGreen));
@@ -59,6 +63,8 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         public final TextView minorView;
         public final TextView rssiView;
         public final TextView nameView;
+        public final TextView addressView;
+
 
         public BeaconViewHolder(View itemView) {
             super(itemView);
@@ -68,20 +74,20 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
             this.minorView = (TextView) itemView.findViewById(R.id.minor_text);
             this.rssiView = (TextView) itemView.findViewById(R.id.rssi_text);
             this.nameView = (TextView) itemView.findViewById(R.id.beacon_name_text);
+            this.addressView = (TextView) itemView.findViewById(R.id.device_address);
         }
 
         @Override
         public void onClick(View view) {
-            Log.d("CLICKED!", "TJOHOO");
             Intent intent = new Intent(view.getContext(), SubscribedBeacons.class);
             intent.putExtra("uuid", uuidView.getText());
             intent.putExtra("major", majorView.getText());
             intent.putExtra("minor", minorView.getText());
             intent.putExtra("name", nameView.getText());
             intent.putExtra("rssi", rssiView.getText());
+            intent.putExtra("deviceAddress", addressView.getText());
             intent.putExtra("has_beacon", true);
             view.getContext().startActivity(intent);
-
         }
     }
 }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-            <item
-                android:id="@+id/scan_active"
-                android:title="Scan Activity"/>
-            <item
-                android:id="@+id/subscription_list"
-                android:title="Subscription list"/>
+    <item
+        android:id="@+id/scan_active"
+        android:title="@string/beacon_scan"
+        android:onClick="startScanActivity" />
+    <item
+        android:id="@+id/subscription_list"
+        android:title="@string/subscribed_beacons"
+        android:onClick="startSubscriptionListActivity"/>
 </menu>

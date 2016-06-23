@@ -38,7 +38,6 @@ public class MainActivity extends BaseActivity {
         Vibrator vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(2000);
 
-
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "BLE Not Supported",
                     Toast.LENGTH_SHORT).show();
@@ -82,7 +81,6 @@ public class MainActivity extends BaseActivity {
                                 Toast.makeText(getApplicationContext(), "Wrong user input", Toast.LENGTH_LONG).show();
                                 finish();
                             }
-
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -121,14 +119,12 @@ public class MainActivity extends BaseActivity {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        if (result != null) {
+                        boolean responseValue = result.get("response_value").getAsString().contains("200");
+                        if (responseValue) {
                             Log.d(TAG, result.toString());
-                            Log.d(TAG, "ID_USER: " +result.get("id_user").getAsString());
                             saveUserId(getApplicationContext() ,result.get("id_user").getAsString());
-
-
                         } else {
-                            Log.d(TAG, "no result");
+                            Log.d(TAG, result.get("response_value").getAsString());
                         }
                     }
                 });

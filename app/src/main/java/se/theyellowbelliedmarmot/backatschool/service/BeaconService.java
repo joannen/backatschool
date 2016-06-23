@@ -32,6 +32,7 @@ public final class BeaconService {
                 });
     }
 
+
     private String inputToJson(String apiKey, String userId, String beaconUuid){
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("api_key", apiKey);
