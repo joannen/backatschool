@@ -16,6 +16,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import se.theyellowbelliedmarmot.backatschool.R;
+import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.User;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
@@ -24,9 +25,6 @@ public class MainActivity extends BaseActivity {
     private String firstName;
     private String lastName;
     private User user;
-
-    private static String URL = "http://beacons.zenzor.io/sys/api/register_user";
-    private static String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +97,7 @@ public class MainActivity extends BaseActivity {
     public void registerUser(final User user, final Context context) {
         String input = JsonParser.userInputToJson(APIKEY, user.getFirstName(), user.getLastName());
 
-        Ion.with(context).load(URL)
+        Ion.with(context).load(URLS.REGISTER_USER)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setStringBody(input)
                 .asJsonObject()

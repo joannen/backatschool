@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -36,7 +35,6 @@ import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 public class ScanActiveBeacon extends BaseActivity {
 
     private static final long SCAN_PERIOD = 5000;
-    public static final String TAG = "LOGTAG";
     public static final String BEACON_NAME = "closebeacon.com";
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION =0 ;
@@ -98,19 +96,15 @@ public class ScanActiveBeacon extends BaseActivity {
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-//            byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData(76);
-            String deviceName = result.getDevice().getName();
+
+            //the manufacturerSpecificData is bytearray at the 0:th place in the scanRecord
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
+
             //if lenght > 10, beacon is active
             if (manufacturerSpecificData.length >10){
-                int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
-                int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
-                String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
-                String deviceAddress = result.getDevice().getAddress();
-                Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
+                Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
                 addBeaconToList(beacon);
             }
-
         }
 
         @Override
@@ -151,16 +145,6 @@ public class ScanActiveBeacon extends BaseActivity {
 
     private void addBeaconToList(Beacon beacon){
 
-//        if (!beacons.contains(beacon)){
-//            beacons.add(beacon);
-//            Collections.sort(beacons, rssiComparator);
-//            adapter.notifyDataSetChanged();
-//        } else {
-//            beacons.remove(beacon);
-//            beacons.add(beacon);
-//            Collections.sort(beacons, rssiComparator);
-//            adapter.notifyDataSetChanged();
-//        }
         if(beacons.contains(beacon)){
             beacons.remove(beacon);
         }

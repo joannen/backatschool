@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,7 +39,6 @@ public class BackgroundScanningService extends Service {
     private List<String> subscribedBeacons;
     private AtomicBoolean inRange;
     private String userId;
-
 
     @Nullable
     @Override
@@ -77,59 +75,39 @@ public class BackgroundScanningService extends Service {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
 
-            if(result== null){
-                Log.d(TAG, "RESULT NULL");
-            }
-
             Log.d(TAG, String.valueOf(result));
             Log.d(TAG, String.valueOf(inRange));
             Range range = checkRSSI(result.getRssi());
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
-//            int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
-//            int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
-//            String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
-//            String deviceAddress = result.getDevice().getAddress();
-//            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
 
-            switch (range){
-                case IN:
-                    if(!inRange.get()){
-                        inRange.set(true);
-                        Log.d(TAG, "IN RANGE");
-                        if(manufacturerSpecificData.length>10){
-                            int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
-                            int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
-                            String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
-                            String deviceAddress = result.getDevice().getAddress();
-                            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
-                            PresenceDetectionService.inRangeDetected(APIKEY,new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
 
+            if (manufacturerSpecificData.length > 10) {
+                switch (range) {
+                    case IN:
+                        if (!inRange.get()) {
+                            inRange.set(true);
+                            Log.d(TAG, "IN RANGE");
+                            Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
+                            PresenceDetectionService.inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
+
+                        } else {
+                            Log.d(TAG, "IN RANGE BUT DOING NOTHING");
                         }
-                    }else {
-                        Log.d(TAG, "IN RANGE BUT DOING NOTHING");
-                    }
-                    break;
-                case OUT:
-                    if(inRange.get()){
-                        inRange.set(false);
-                        if(manufacturerSpecificData.length>10){
-                            int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
-                            int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
-                            String uuid = Utility.convertToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
-                            String deviceAddress = result.getDevice().getAddress();
-                            Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), result.getDevice().getName(), deviceAddress);
+                        break;
+                    case OUT:
+                        if (inRange.get()) {
+                            inRange.set(false);
+                            Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
                             PresenceDetectionService.outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
                             Log.d(TAG, "OUT OF RANGE");
-                        }
-
-                    }else {
-                        Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
-                    }
-                    break;
-                default:Log.d(TAG, "UNCLEAR");
+                        } else {
+                            Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
+                            }
+                        break;
+                    default:
+                        Log.d(TAG, "UNCLEAR");
+                }
             }
-
-
         }
     };
 
@@ -155,8 +133,4 @@ public class BackgroundScanningService extends Service {
             return Range.IN;
         }else return Range.OUT;
     }
-
-
-
-
 }

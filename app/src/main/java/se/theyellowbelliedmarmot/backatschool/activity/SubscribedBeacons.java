@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.theyellowbelliedmarmot.backatschool.R;
+import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
 import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
@@ -74,9 +75,7 @@ public class SubscribedBeacons extends BaseActivity {
             //just update recyclerview
             adapter.notifyDataSetChanged();
         }
-        //get all beacons from shared pref
-//        existingBeacons = readBeacons();
-
+        //start background scanning
         Intent intent = new Intent(this, BackgroundScanningService.class);
         startService(intent);
     }
@@ -84,7 +83,7 @@ public class SubscribedBeacons extends BaseActivity {
     public void subscribeToBeacon(String user_id, String beaconUuid ,Context context) {
         String input = JsonParser.subscriptionInputToJson(APIKEY, user_id, beaconUuid);
 
-        Ion.with(context).load(URL)
+        Ion.with(context).load(URLS.SUBSCRIBE_BEACON)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setStringBody(input)
                 .asJsonObject()

@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
@@ -15,15 +16,9 @@ import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
  */
 public class PresenceDetectionService {
 
-    protected static final String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
-    private static final String URL_IN_RANGE = "http://beacons.zenzor.io/sys/api/beacon_nearby";
-    private static final String URL_OUT_OF_RANGE = "http://beacons.zenzor.io/sys/api/beacon_outofrange";
-
-
-
     public static void inRangeDetected(String apikey ,ScanResponse scanResponse, Context context){
         String input = JsonParser.detectionInputToJson(apikey, scanResponse);
-        Ion.with(context).load(URL_IN_RANGE)
+        Ion.with(context).load(URLS.IN_RANGE)
         .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setStringBody(input)
                 .asJsonObject()
@@ -35,13 +30,11 @@ public class PresenceDetectionService {
                         }
                     }
                 });
-
-
     }
 
     public static void  outOfRangeDetected(String apikey, ScanResponse scanResponse, Context context){
         String input = JsonParser.detectionInputToJson(apikey, scanResponse);
-            Ion.with(context).load(URL_OUT_OF_RANGE)
+            Ion.with(context).load(URLS.OUT_OF_RANGE)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setStringBody(input)
                 .asJsonObject()
@@ -53,9 +46,6 @@ public class PresenceDetectionService {
                         }
                     }
                 });
-
-
     }
-
 
 }
