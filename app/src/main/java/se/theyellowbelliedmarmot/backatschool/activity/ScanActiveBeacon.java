@@ -152,7 +152,6 @@ public class ScanActiveBeacon extends BaseActivity {
     }
 
     private void addBeaconToList(Beacon beacon){
-        //Just to se other beacons temp, not just one. Remove this line later.
         if(beacons.contains(beacon)){
             beacons.remove(beacon);
         }

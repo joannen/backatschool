@@ -25,6 +25,10 @@ public final class Beacon implements Comparable<Beacon> {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getUuid() {
         return uuid;
     }

@@ -20,15 +20,6 @@
         android:layout_height="fill_parent">
 
         <TextView
-            android:id="@+id/subsc_beacon_name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_alignParentLeft="true"
-            android:textColor="@color/textDark"
-            />
-
-        <TextView
             android:id="@+id/subsc_major_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +33,7 @@
             android:id="@+id/subsc_minor_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/major_text"
+            android:layout_below="@id/subsc_major_text"
             android:text="Beacon"
             android:layout_alignParentLeft="true"
             android:textColor="@color/textDark"
@@ -50,15 +41,25 @@
             />
 
         <TextView
-            android:id="@+id/rssi_text"
+            android:id="@+id/subsc_beacon_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:layout_below="@id/minor_text"
+            android:layout_below="@id/subsc_minor_text"
             android:layout_alignParentLeft="true"
             android:textColor="@color/textDark"
-            android:text="Beacon"
             />
+
+        <TextView
+            android:id="@+id/subsc_device_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_below="@id/subsc_beacon_name_text"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/textDark"
+            />
+
     </RelativeLayout>
 
 </LinearLayout>

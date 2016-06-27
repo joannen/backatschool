@@ -128,4 +128,5 @@ public class BaseActivity extends AppCompatActivity{
         return devices== null?new ArrayList<String>():new ArrayList<>(devices);
     }
 
+
 }

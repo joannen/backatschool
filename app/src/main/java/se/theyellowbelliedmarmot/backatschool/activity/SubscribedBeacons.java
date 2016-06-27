@@ -6,22 +6,15 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-
 import java.util.ArrayList;
 import java.util.List;
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
-import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
+import se.theyellowbelliedmarmot.backatschool.model.adapter.SubscribedBeaconAdapter;
 import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
-import se.theyellowbelliedmarmot.backatschool.service.BeaconService;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
 public class SubscribedBeacons extends BaseActivity {
@@ -49,7 +42,7 @@ public class SubscribedBeacons extends BaseActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.subscribed_beacon_list);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new BeaconAdapter(this, existingBeacons);
+        adapter = new SubscribedBeaconAdapter(this, existingBeacons);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -73,14 +66,11 @@ public class SubscribedBeacons extends BaseActivity {
             //save deviceaddress in shared pref for background scanning service
             devices.add(beacon.getDeviceAddress());
             saveDeviceAddress(devices);
-
         }else {
             //just update recyclerview
             adapter.notifyDataSetChanged();
         }
         //get all beacons from shared pref
-//        existingBeacons = readBeacons();
-
         Intent intent = new Intent(this, BackgroundScanningService.class);
         startService(intent);
     }
@@ -108,17 +98,5 @@ public class SubscribedBeacons extends BaseActivity {
             adapter.notifyDataSetChanged();
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.beacon_settings, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    public void beaconSettings(MenuItem item) {
-        Toast.makeText(getApplicationContext(), "Change beacon name", Toast.LENGTH_SHORT).show();
-    }
-
 
 }
