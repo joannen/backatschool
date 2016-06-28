@@ -3,6 +3,7 @@ package se.theyellowbelliedmarmot.backatschool.model.adapter;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
