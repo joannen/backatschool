@@ -25,7 +25,6 @@ public class SubscribedBeacons extends BaseActivity {
 
     List<Beacon> existingBeacons;
     List<String> devices;
-    private static final String URL = "http://beacons.zenzor.io/sys/api/subscribe_beacon";
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;

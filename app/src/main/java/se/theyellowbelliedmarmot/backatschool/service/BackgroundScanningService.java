@@ -14,13 +14,19 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
+import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 
 /**
@@ -88,7 +94,8 @@ public class BackgroundScanningService extends Service {
                             inRange.set(true);
                             Log.d(TAG, "IN RANGE");
                             Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-                            PresenceDetectionService.inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
+//                            PresenceDetectionService.inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
+                            inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
 
                         } else {
                             Log.d(TAG, "IN RANGE BUT DOING NOTHING");
@@ -98,7 +105,8 @@ public class BackgroundScanningService extends Service {
                         if (inRange.get()) {
                             inRange.set(false);
                             Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-                            PresenceDetectionService.outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
+//                            PresenceDetectionService.outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
+                            outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
                             Log.d(TAG, "OUT OF RANGE");
                         } else {
                             Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
@@ -133,4 +141,44 @@ public class BackgroundScanningService extends Service {
             return Range.IN;
         }else return Range.OUT;
     }
+
+    public static void inRangeDetected(String apikey ,ScanResponse scanResponse, Context context){
+        Log.d("IN RANGE DETECTED", "YAY");
+        String input = JsonParser.detectionInputToJson(apikey, scanResponse);
+        Log.d(TAG, input);
+        Ion.with(context).load(URLS.IN_RANGE)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setStringBody(input)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        Log.d("result is null: " , String.valueOf(result ==null));
+                        if (result != null) {
+                            Log.d("Result in Range: " , result.toString());
+                        }
+                    }
+                });
+    }
+
+    public static void  outOfRangeDetected(String apikey, ScanResponse scanResponse, Context context){
+        Log.d("OUT OF RANGE DETECTED", "YAY");
+
+        String input = JsonParser.detectionInputToJson(apikey, scanResponse);
+        Ion.with(context).load(URLS.OUT_OF_RANGE)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setStringBody(input)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        Log.d("result is null: " , String.valueOf(result ==null));
+
+                        if (result != null) {
+                            Log.d("Result out of Range: " , result.toString());
+                        }
+                    }
+                });
+    }
+
 }

@@ -25,6 +25,7 @@ public class PresenceDetectionService {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
+                        Log.d("result is null: " , String.valueOf(result ==null));
                         if (result != null) {
                             Log.d("Result in Range: " , result.toString());
                         }
@@ -41,6 +42,8 @@ public class PresenceDetectionService {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
+                        Log.d("result is null: " , String.valueOf(result ==null));
+
                         if (result != null) {
                             Log.d("Result out of Range: " , result.toString());
                         }
