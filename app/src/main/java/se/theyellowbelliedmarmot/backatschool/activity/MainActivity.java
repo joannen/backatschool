@@ -121,7 +121,6 @@ public class MainActivity extends BaseActivity {
                     public void onCompleted(Exception e, JsonObject result) {
                         boolean responseValue = result.get("response_value").getAsString().contains("200");
                         if (responseValue) {
-                            Log.d(TAG, result.toString());
                             saveUserId(getApplicationContext() ,result.get("id_user").getAsString());
                         } else {
                             Log.d(TAG, result.get("response_value").getAsString());

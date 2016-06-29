@@ -1,9 +1,11 @@
 package se.theyellowbelliedmarmot.backatschool.model;
 
+import java.io.Serializable;
+
 /**
  * Created by joanne on 02/06/16.
  */
-public final class Beacon implements Comparable<Beacon> {
+public final class Beacon implements Comparable<Beacon>, Serializable {
 
     private String uuid;
     private String major;

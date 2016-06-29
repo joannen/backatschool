@@ -4,16 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 import se.theyellowbelliedmarmot.backatschool.R;
-import se.theyellowbelliedmarmot.backatschool.activity.ScanActiveBeacon;
 import se.theyellowbelliedmarmot.backatschool.activity.SubscribedBeacons;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 
@@ -64,7 +61,6 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
         public final TextView rssiView;
         public final TextView nameView;
         public final TextView addressView;
-
 
         public BeaconViewHolder(View itemView) {
             super(itemView);

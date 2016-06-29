@@ -1,60 +1,58 @@
 package se.theyellowbelliedmarmot.backatschool.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import java.util.List;
 import se.theyellowbelliedmarmot.backatschool.R;
+import se.theyellowbelliedmarmot.backatschool.activity.BaseActivity;
+import se.theyellowbelliedmarmot.backatschool.activity.SubscribedBeacons;
+import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 
 /**
  * Created by TheYellowBelliedMarmot on 2016-06-27.
  */
 public class BeaconNameFragment extends DialogFragment {
 
-//    public static String PREF_BEACON_NAME = "new_beacon_name";
     private SharedPreferences preferences;
     private EditText beaconName;
+    NoticeDialogListener dialogListener;
+    Beacon beacon;
 
-//    @Override
-//    public Dialog onCreateDialog(Bundle savedInstanceState) {
-//
-//        Context context = getActivity();
-//
-//        LinearLayout layout = new LinearLayout(context);
-//        layout.setOrientation(LinearLayout.VERTICAL);
-//        final EditText newName = new EditText(context);
-//        newName.setHint("Enter new name");
-//        layout.addView(newName);
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(context)
-//                .setTitle("Change beacon name")
-//                .setView(layout)
-//                .setNegativeButton("Cancel", null)
-//                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        beaconName = newName.getText().toString();
-//                        preferences = getActivity().getSharedPreferences(PREF_BEACON_NAME, Context.MODE_PRIVATE);
-//                        SharedPreferences.Editor editor = preferences.edit();
-//                        editor.putString("beacon_name", beaconName);
-//                        editor.commit();
-//                    }
-//                });
-//
-//        AlertDialog dialog = builder.create();
-//
-//        return dialog;
-//
-//    }
+    public interface NoticeDialogListener{
+        public void onDialogPositiveClick(DialogFragment fragment, Beacon beacon, String name);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            dialogListener = (NoticeDialogListener) activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException(activity.toString());
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = this.getArguments();
+        if (bundle != null){
+            beacon = (Beacon) bundle.getSerializable("beacon");
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -89,28 +87,30 @@ public class BeaconNameFragment extends DialogFragment {
                 buttonOK.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (nameInputCheck()) {
+                        String name = beaconName.getText().toString();
+
+                        if (nameInputCheck(name)) {
                             d.dismiss();
                         }
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("name", name);
+                        editor.commit();
+                        dialogListener.onDialogPositiveClick(BeaconNameFragment.this, beacon, name );
+                        Toast.makeText(getActivity(),"New beacon name is saved", Toast.LENGTH_LONG ).show();
                     }
                 });
             }
         });
+
         return dialog;
     }
 
-    private boolean nameInputCheck(){
-        String name = beaconName.getText().toString();
-
+    private boolean nameInputCheck(String name){
         if (name.equals("")){
             Toast.makeText(getActivity(),"No name",
                     Toast.LENGTH_LONG).show();
             return false;
         }
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("name", name);
-        editor.commit();
-
         return true;
     }
 }

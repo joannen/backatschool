@@ -1,5 +1,6 @@
 package se.theyellowbelliedmarmot.backatschool.activity;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +20,7 @@ import se.theyellowbelliedmarmot.backatschool.model.adapter.SubscribedBeaconAdap
 import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
-public class SubscribedBeacons extends BaseActivity {
+public class SubscribedBeacons extends BaseActivity implements BeaconNameFragment.NoticeDialogListener {
 
     List<Beacon> existingBeacons;
     List<String> devices;
@@ -34,7 +35,11 @@ public class SubscribedBeacons extends BaseActivity {
         setContentView(R.layout.activity_subscribed_beacons);
         setTitle(R.string.subscribed_beacons);
 
-        existingBeacons = readBeacons();
+        if (readBeacons() == null){
+            existingBeacons = new ArrayList<>();
+        }else {
+            existingBeacons = readBeacons();
+        }
 
         if(readDeviceAddresses()==null){
             devices = new ArrayList<>();
@@ -50,14 +55,12 @@ public class SubscribedBeacons extends BaseActivity {
 
         //check if user clicked on new beacon and save that beacon in shared pref
         if(getIntent().hasExtra("has_beacon")){
-            Log.d("has extra", getIntent().getStringExtra("uuid"));
             String name = getIntent().getStringExtra("name");
             String uuid = getIntent().getStringExtra("uuid");
             String major = getIntent().getStringExtra("major");
             String minor = getIntent().getStringExtra("minor");
             String rssi = getIntent().getStringExtra("rssi");
             String deviceAddress = getIntent().getStringExtra("deviceAddress");
-            Log.d(TAG, "userid: "+ readUserId());
             subscribeToBeacon(readUserId(),uuid, this );
 
             Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name, deviceAddress);
@@ -68,14 +71,14 @@ public class SubscribedBeacons extends BaseActivity {
             //save deviceaddress in shared pref for background scanning service
             devices.add(beacon.getDeviceAddress());
             saveDeviceAddress(devices);
-        }else {
+        }
+        else {
             //just update recyclerview
             adapter.notifyDataSetChanged();
         }
         //get all beacons from shared pref
         Intent intent = new Intent(this, BackgroundScanningService.class);
         startService(intent);
-
     }
 
     public void subscribeToBeacon(String user_id, String beaconUuid ,Context context) {
@@ -102,4 +105,18 @@ public class SubscribedBeacons extends BaseActivity {
         }
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment fragment, Beacon beacon, String name) {
+        for (Beacon b : existingBeacons) {
+            if (b.equals(beacon)){
+                existingBeacons.remove(b);
+                Beacon newBeacon = new Beacon(beacon.getUuid(), beacon.getMajor(), beacon.getMinor(), 1 , name, beacon.getDeviceAddress());
+                existingBeacons.add(newBeacon);
+                saveBeacon(existingBeacons);
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+
+    }
 }

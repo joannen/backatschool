@@ -3,7 +3,7 @@ package se.theyellowbelliedmarmot.backatschool.model.adapter;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +22,7 @@ public class SubscribedBeaconAdapter extends RecyclerView.Adapter<SubscribedBeac
 
     private List<Beacon> beacons;
     private Context context;
+
 
     public SubscribedBeaconAdapter(Context context, List<Beacon> beacons){
         this.context = context;
@@ -69,7 +70,6 @@ public class SubscribedBeaconAdapter extends RecyclerView.Adapter<SubscribedBeac
             addressView = (TextView) itemView.findViewById(R.id.subsc_device_address);
 
             itemView.setOnClickListener(this);
-
         }
 
         public void bindSubscribedBeacon(Beacon beacon){
@@ -82,9 +82,14 @@ public class SubscribedBeaconAdapter extends RecyclerView.Adapter<SubscribedBeac
 
         @Override
         public void onClick(View view) {
+            Beacon fragmentBeacon = new Beacon(uuidView.getText().toString(), majorView.getText().toString(),minorView.getText().toString(),1, nameView.getText().toString(),addressView.getText().toString());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("beacon", fragmentBeacon);
             BeaconNameFragment nameFragment = new BeaconNameFragment();
             FragmentManager manager = ((Activity) context).getFragmentManager();
+            nameFragment.setArguments(bundle);
             nameFragment.show(manager, "name_fragment");
         }
+
     }
 }

@@ -28,5 +28,12 @@
         tools:context=".activity.SubscribedBeacon"
         />
 
+    <!--<fragment-->
+        <!--android:name="se.theyellowbelliedmarmot.backatschool.fragment.BeaconNameFragment"-->
+        <!--android:id= "@+id/alert_fragment"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--/>-->
 
 </RelativeLayout>

@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import se.theyellowbelliedmarmot.backatschool.R;
+import se.theyellowbelliedmarmot.backatschool.fragment.BeaconNameFragment;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 /**
@@ -70,7 +73,7 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     protected List<Beacon> readBeacons(){
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("beacons", Context.MODE_PRIVATE);
         Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
         List<Beacon> beacons = new ArrayList<>();
         if(jsonBeacons !=null){
@@ -88,7 +91,8 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     protected void saveBeacon(List<Beacon> beaconList){
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("beacons", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Set<String> jsonBeacons = new HashSet<>();
 
@@ -127,6 +131,5 @@ public class BaseActivity extends AppCompatActivity{
         Set<String> devices =sharedPreferences.getStringSet("devices", null);
         return devices== null?new ArrayList<String>():new ArrayList<>(devices);
     }
-
 
 }

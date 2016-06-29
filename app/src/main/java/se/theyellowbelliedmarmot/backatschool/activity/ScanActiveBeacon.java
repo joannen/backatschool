@@ -101,7 +101,6 @@ public class ScanActiveBeacon extends BaseActivity {
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-//         //            byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData(76);
             String deviceName = result.getDevice().getName();
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
             //if lenght > 10, beacon is active
@@ -130,7 +129,6 @@ public class ScanActiveBeacon extends BaseActivity {
                 }
             }, SCAN_PERIOD);
             scanner.startScan(scanFilters, scanSettings, scanCallback);
-            // Test this
             Toast.makeText(getApplicationContext(), "Scanning for beacons", Toast.LENGTH_SHORT).show();
         }  else {
             scanner.stopScan(scanCallback);
