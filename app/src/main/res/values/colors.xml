@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="deepBlue">#355C7D</color>
-  <color name="deepPurple">#6C5B7B</color>
-  <color name="pirPul">#C06C84</color>
-  <color name="pinkRed">#F67280</color>
-  <color name="flamingo">#F8B195</color>
-  <color name="textDark">#353535</color>
-  <color name="textLight">#F6F6F6</color>
-  <color name="lightGray">#dddddd</color>
-  <color name="middleGray">#8d8d8d</color>
-  <color name="darkGreen">#35687d</color>
-  <color name="lightGreen">#99cccc</color>
+    <color name="deepBlue">#355C7D</color>
+    <color name="deepPurple">#6C5B7B</color>
+    <color name="pirPul">#C06C84</color>
+    <color name="pinkRed">#eee77a86</color>
+    <color name="flamingo">#F8B195</color>
+    <color name="textDark">#353535</color>
+    <color name="textLight">#F6F6F6</color>
+    <color name="lightGray">#dddddd</color>
+    <color name="middleGray">#8d8d8d</color>
+    <color name="darkGreen">#35687d</color>
+    <color name="lightGreen">#80cccc</color>
+    <color name="transOne">#8035687d</color>
+    <color name="transTwo">#4D35687d</color>
 </resources>

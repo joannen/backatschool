@@ -8,12 +8,8 @@
 
     <TextView
         android:id="@+id/subsc_uuid_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="@color/textDark"
-        android:text="Beacon"
-        android:textStyle="normal|bold"/>
+        style="@style/MainTextViewTheme"
+        android:text="Beacon"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -21,45 +17,32 @@
 
         <TextView
             android:id="@+id/subsc_major_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/RowTextViewStyle"
             android:text="Beacon"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/textDark"
-            android:textSize="15sp"
             />
 
         <TextView
             android:id="@+id/subsc_minor_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/RowTextViewStyle"
             android:layout_below="@id/subsc_major_text"
             android:text="Beacon"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/textDark"
-            android:textSize="15sp"
             />
 
         <TextView
             android:id="@+id/subsc_beacon_name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
+            style="@style/RowTextViewStyle"
             android:layout_below="@id/subsc_minor_text"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/textDark"
             />
 
         <TextView
             android:id="@+id/subsc_device_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
+            style="@style/RowTextViewStyle"
             android:layout_below="@id/subsc_beacon_name_text"
             android:layout_alignParentLeft="true"
-            android:textColor="@color/textDark"
             />
 
     </RelativeLayout>
-
 </LinearLayout>

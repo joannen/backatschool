@@ -42,9 +42,9 @@ public class SubscribedBeaconAdapter extends RecyclerView.Adapter<SubscribedBeac
         holder.bindSubscribedBeacon(beacons.get(position));
 
         if (position % 2 == 0) {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.lightGreen));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.transOne));
         } else {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.lightGray));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.transTwo));
         }
     }
 

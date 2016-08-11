@@ -1,4 +1,5 @@
 package se.theyellowbelliedmarmot.backatschool.service;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;

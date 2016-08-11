@@ -111,8 +111,15 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     public void startSubscriptionListActivity(MenuItem item){
-        Intent intent = new Intent(this, SubscribedBeacons.class);
-        startActivity(intent);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("beacons", Context.MODE_PRIVATE);
+        Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
+        List<Beacon> beacons = new ArrayList<>();
+        if(jsonBeacons !=null) {
+            Intent intent = new Intent(this, SubscribedBeacons.class);
+            startActivity(intent);
+        } else{
+            Toast.makeText(getApplicationContext(), "Subscribed Beaconlist is empty!", Toast.LENGTH_LONG).show();
+        }
     }
 
     protected void saveDeviceAddress(List<String> deviceAddresses) {
