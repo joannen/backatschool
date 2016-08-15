@@ -23,8 +23,8 @@ import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
 public class SubscribedBeacons extends BaseActivity {
 
-    List<Beacon> existingBeacons;
-    List<String> devices;
+    private List<Beacon> existingBeacons;
+    private List<String> devices;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
@@ -37,9 +37,9 @@ public class SubscribedBeacons extends BaseActivity {
         //get subscribed beacons from shared preferences
         existingBeacons = readBeacons();
 
-        if(readDeviceAddresses()==null){
+        if (readDeviceAddresses() == null) {
             devices = new ArrayList<>();
-        }else{
+        } else {
             devices = readDeviceAddresses();
         }
 
@@ -50,7 +50,7 @@ public class SubscribedBeacons extends BaseActivity {
         recyclerView.setAdapter(adapter);
 
         //check if user clicked on new beacon and save that beacon in shared pref
-        if(getIntent().hasExtra("has_beacon")){
+        if (getIntent().hasExtra("has_beacon")) {
             Log.d("has extra", getIntent().getStringExtra("uuid"));
             String name = getIntent().getStringExtra("name");
             String uuid = getIntent().getStringExtra("uuid");
@@ -58,10 +58,10 @@ public class SubscribedBeacons extends BaseActivity {
             String minor = getIntent().getStringExtra("minor");
             String rssi = getIntent().getStringExtra("rssi");
             String deviceAddress = getIntent().getStringExtra("deviceAddress");
-            Log.d(TAG, "userid: "+ readUserId());
-            subscribeToBeacon(readUserId(),uuid, this );
+            Log.d(TAG, "userid: " + readUserId());
+            subscribeToBeacon(readUserId(), uuid, this);
 
-            Beacon beacon = new Beacon(uuid, major, minor,Integer.parseInt(rssi), name, deviceAddress);
+            Beacon beacon = new Beacon(uuid, major, minor, Integer.parseInt(rssi), name, deviceAddress);
             //add beacon to recycler view
             addBeaconToSubscriptionList(beacon);
             //add beacon to shared pref
@@ -70,16 +70,16 @@ public class SubscribedBeacons extends BaseActivity {
             devices.add(beacon.getDeviceAddress());
             saveDeviceAddress(devices);
 
-        }else {
+        } else {
             //just update recyclerview
             adapter.notifyDataSetChanged();
         }
-        //start background scanning
+        //start background scanning service
         Intent intent = new Intent(this, BackgroundScanningService.class);
         startService(intent);
     }
 
-    public void subscribeToBeacon(String user_id, String beaconUuid ,Context context) {
+    public void subscribeToBeacon(String user_id, String beaconUuid, Context context) {
         String input = JsonParser.subscriptionInputToJson(APIKEY, user_id, beaconUuid);
 
         Ion.with(context).load(URLS.SUBSCRIBE_BEACON)
@@ -90,14 +90,14 @@ public class SubscribedBeacons extends BaseActivity {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         if (result != null) {
-                            Log.d("Result subscr: " , result.toString());
+                            Log.d("Result subscr: ", result.toString());
                         }
                     }
                 });
     }
 
-    private void addBeaconToSubscriptionList(Beacon beacon){
-        if(!existingBeacons.contains(beacon)){
+    private void addBeaconToSubscriptionList(Beacon beacon) {
+        if (!existingBeacons.contains(beacon)) {
             existingBeacons.add(beacon);
             adapter.notifyDataSetChanged();
         }
