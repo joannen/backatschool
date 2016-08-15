@@ -9,12 +9,12 @@ import se.theyellowbelliedmarmot.backatschool.service.Range;
  * Created by joanne on 22/06/16.
  */
 public final class ScanResponse {
-    private Beacon beacon;
-    private String userId;
-    private String timestamp;
-    private Range range;
+    private final Beacon beacon;
+    private final String userId;
+    private final String timestamp;
+    private final Range range;
 
-    public ScanResponse (Beacon beacon, String id, Range range){
+    public ScanResponse(Beacon beacon, String id, Range range) {
         this.beacon = beacon;
         this.userId = id;
         this.range = range;

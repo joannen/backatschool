@@ -7,9 +7,9 @@ import java.util.UUID;
  */
 public class User {
 
-    private String firstName;
-    private String lastName;
-    private String id;
+    private final String firstName;
+    private final String lastName;
+    private final String id;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;

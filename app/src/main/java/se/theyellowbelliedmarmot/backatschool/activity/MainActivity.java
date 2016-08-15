@@ -31,13 +31,15 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //first check for BLEsupport
+
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "BLE Not Supported",
                     Toast.LENGTH_SHORT).show();
             finish();
         }
-
-        if(readUser().equals("")) {
+        //check if user is registered
+        if (readUser().equals("")) {
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             final EditText authFirstName = new EditText(this);
@@ -62,7 +64,7 @@ public class MainActivity extends BaseActivity {
                                 registerUser(user, getApplicationContext());
                                 Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
                                 startActivity(intent);
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -77,8 +79,7 @@ public class MainActivity extends BaseActivity {
                     });
             authInputBox.create();
             authInputBox.show();
-        }
-        else {
+        } else {
             Log.d(TAG, "USERID: " + readUserId());
             Log.d(TAG, "USER: " + readUser());
             Intent intent = new Intent(this, ScanActiveBeacon.class);
@@ -94,7 +95,7 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    public void registerUser(final User user, final Context context) {
+    private void registerUser(final User user, final Context context) {
         String input = JsonParser.userInputToJson(APIKEY, user.getFirstName(), user.getLastName());
 
         Ion.with(context).load(URLS.REGISTER_USER)
@@ -106,8 +107,8 @@ public class MainActivity extends BaseActivity {
                     public void onCompleted(Exception e, JsonObject result) {
                         if (result != null) {
                             Log.d(TAG, result.toString());
-                            Log.d(TAG, "ID_USER: " +result.get("id_user").getAsString());
-                            saveUserId(getApplicationContext() ,result.get("id_user").getAsString());
+                            Log.d(TAG, "ID_USER: " + result.get("id_user").getAsString());
+                            saveUserId(getApplicationContext(), result.get("id_user").getAsString());
 
                         } else {
                             Log.d(TAG, "no result");

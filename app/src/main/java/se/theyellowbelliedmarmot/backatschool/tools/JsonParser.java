@@ -13,7 +13,7 @@ public final class JsonParser {
 
     private static final String INPUT = "input=";
 
-    public static String userInputToJson(String apiKey, String firstName, String lastName){
+    public static String userInputToJson(String apiKey, String firstName, String lastName) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("api_key", apiKey);
         jsonObject.addProperty("first_name", firstName);
@@ -22,7 +22,7 @@ public final class JsonParser {
         return inputString;
     }
 
-    public static String subscriptionInputToJson(String apiKey, String userId, String beaconUuid){
+    public static String subscriptionInputToJson(String apiKey, String userId, String beaconUuid) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("api_key", apiKey);
         jsonObject.addProperty("id_user", userId);
@@ -31,7 +31,7 @@ public final class JsonParser {
         return inputString;
     }
 
-    public static Beacon jsonToBeacon(JsonObject jsonObject){
+    public static Beacon jsonToBeacon(JsonObject jsonObject) {
         Beacon beacon;
         String name = jsonObject.get("name").getAsString();
         String major = jsonObject.get("major").getAsString();
@@ -40,11 +40,11 @@ public final class JsonParser {
         int rssi = jsonObject.get("rssi").getAsInt();
         String deviceAddress = jsonObject.get("device_address").getAsString();
 
-        beacon = new Beacon(uuid, major,minor, rssi, name, deviceAddress);
+        beacon = new Beacon(uuid, major, minor, rssi, name, deviceAddress);
         return beacon;
     }
 
-    public static JsonObject beaconToJson(Beacon beacon){
+    public static JsonObject beaconToJson(Beacon beacon) {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", beacon.getName());
@@ -57,13 +57,13 @@ public final class JsonParser {
 
     }
 
-    public static String detectionInputToJson(String apikey, ScanResponse scanResponse){
+    public static String detectionInputToJson(String apikey, ScanResponse scanResponse) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("api_key", apikey);
         jsonObject.addProperty("id_user", scanResponse.getUserId());
-        jsonObject.addProperty("beacon_uuid",scanResponse.getBeacon().getUuid());
+        jsonObject.addProperty("beacon_uuid", scanResponse.getBeacon().getUuid());
 
-        if(scanResponse.getRange().equals(Range.IN)){
+        if (scanResponse.getRange().equals(Range.IN)) {
             jsonObject.addProperty("major", scanResponse.getBeacon().getMajor());
             jsonObject.addProperty("minor", scanResponse.getBeacon().getMinor());
             jsonObject.addProperty("rssi", scanResponse.getBeacon().getRssi());
@@ -72,7 +72,7 @@ public final class JsonParser {
         jsonObject.addProperty("timestamp", scanResponse.getTimestamp());
 
 
-        return INPUT+jsonObject.toString();
+        return INPUT + jsonObject.toString();
 
     }
 

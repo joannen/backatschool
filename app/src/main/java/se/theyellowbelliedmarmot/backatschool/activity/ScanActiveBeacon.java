@@ -35,9 +35,9 @@ import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 public class ScanActiveBeacon extends BaseActivity {
 
     private static final long SCAN_PERIOD = 5000;
-    public static final String BEACON_NAME = "closebeacon.com";
+    private static final String BEACON_NAME = "closebeacon.com";
     private static final int REQUEST_ENABLE_BT = 1;
-    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION =0 ;
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 0;
     private BluetoothLeScanner scanner;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
@@ -85,7 +85,7 @@ public class ScanActiveBeacon extends BaseActivity {
         //request permission for access_coarse_location.
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED){
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
@@ -93,7 +93,7 @@ public class ScanActiveBeacon extends BaseActivity {
         scanBeacon(true);
     }
 
-    private ScanCallback scanCallback = new ScanCallback() {
+    private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
 
@@ -101,7 +101,7 @@ public class ScanActiveBeacon extends BaseActivity {
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
 
             //if lenght > 10, beacon is active
-            if (manufacturerSpecificData.length >10){
+            if (manufacturerSpecificData.length > 10) {
                 Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
                 addBeaconToList(beacon);
             }
@@ -114,7 +114,7 @@ public class ScanActiveBeacon extends BaseActivity {
     };
 
     private void scanBeacon(boolean scan) {
-        if(scan){
+        if (scan) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -124,7 +124,7 @@ public class ScanActiveBeacon extends BaseActivity {
             scanner.startScan(scanFilters, scanSettings, scanCallback);
             // Test this
             Toast.makeText(getApplicationContext(), "Scanning for beacons", Toast.LENGTH_SHORT).show();
-        }  else {
+        } else {
             scanner.stopScan(scanCallback);
         }
     }
@@ -143,9 +143,9 @@ public class ScanActiveBeacon extends BaseActivity {
         }
     }
 
-    private void addBeaconToList(Beacon beacon){
+    private void addBeaconToList(Beacon beacon) {
 
-        if(beacons.contains(beacon)){
+        if (beacons.contains(beacon)) {
             beacons.remove(beacon);
         }
         beacons.add(beacon);
@@ -166,10 +166,10 @@ public class ScanActiveBeacon extends BaseActivity {
         startActivity(intent);
     }
 
-    Comparator<Beacon> rssiComparator= new Comparator<Beacon>() {
+    private final Comparator<Beacon> rssiComparator = new Comparator<Beacon>() {
         @Override
         public int compare(Beacon beaconOne, Beacon beaconTwo) {
-            return (beaconOne.getRssi() > beaconTwo.getRssi()? -1: (beaconOne.getRssi() == beaconTwo.getRssi() ? 0 : 1));
+            return (beaconOne.getRssi() > beaconTwo.getRssi() ? -1 : (beaconOne.getRssi() == beaconTwo.getRssi() ? 0 : 1));
         }
     };
 

@@ -5,12 +5,12 @@ package se.theyellowbelliedmarmot.backatschool.model;
  */
 public final class Beacon implements Comparable<Beacon> {
 
-    private String uuid;
-    private String major;
-    private String minor;
-    private int rssi;
-    private String name;
-    private String deviceAddress;
+    private final String uuid;
+    private final String major;
+    private final String minor;
+    private final int rssi;
+    private final String name;
+    private final String deviceAddress;
 
     public Beacon(String uuid, String major, String minor, int rssi, String name, String deviceAddress) {
         this.uuid = uuid;

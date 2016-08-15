@@ -11,7 +11,7 @@ import se.theyellowbelliedmarmot.backatschool.model.Beacon;
  */
 public final class Utility {
 
-    public static String bytesToHex(byte[] data) {
+    private static String bytesToHex(byte[] data) {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
             int halfbyte = (data[i] >>> 4) & 0x0F;
@@ -27,11 +27,11 @@ public final class Utility {
         return buf.toString();
     }
 
-    public static Beacon resultToBeacon(ScanResult result, byte[] manufacturerSpecificData ){
+    public static Beacon resultToBeacon(ScanResult result, byte[] manufacturerSpecificData) {
 
         int major = (manufacturerSpecificData[18] & 0xff) * 0x100 + (manufacturerSpecificData[19] & 0xff);
         int minor = (manufacturerSpecificData[20] & 0xff) * 0x100 + (manufacturerSpecificData[21] & 0xff);
-        String uuid = Utility.bytesToHex(Arrays.copyOfRange(manufacturerSpecificData, 2,18));
+        String uuid = Utility.bytesToHex(Arrays.copyOfRange(manufacturerSpecificData, 2, 18));
         String deviceAddress = result.getDevice().getAddress();
         String deviceName = result.getDevice().getName();
         Beacon beacon = new Beacon(uuid, Integer.toString(major), Integer.toString(minor), result.getRssi(), deviceName, deviceAddress);
