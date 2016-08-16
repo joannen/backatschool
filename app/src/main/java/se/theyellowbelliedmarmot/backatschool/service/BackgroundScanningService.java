@@ -19,8 +19,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
+import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 
 /**
@@ -40,6 +44,7 @@ public class BackgroundScanningService extends Service {
     private AtomicBoolean inRange;
     private String userId;
     private PresenceDetectionService presenceDetectionService;
+    private Retrofit retrofit;
 
     @Nullable
     @Override
@@ -65,7 +70,8 @@ public class BackgroundScanningService extends Service {
         Log.d(TAG, "SERVICE STARTED");
         setUpScan();
         userId = getSharedPreferences("id", Context.MODE_PRIVATE).getString("id", "");
-        presenceDetectionService = new PresenceDetectionService(this.getApplicationContext());
+        retrofit = new Retrofit.Builder().baseUrl(URLS.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        presenceDetectionService = new PresenceDetectionService(this.getApplicationContext(), retrofit);
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -86,24 +92,27 @@ public class BackgroundScanningService extends Service {
             if (manufacturerSpecificData.length > 10) {
                 switch (range) {
                     case IN:
-                        if (!inRange.get()) {
-                            inRange.set(true);
-                            Log.d(TAG, "IN RANGE");
+                        if (inRange.compareAndSet(false, true)) {
+                            Log.d(TAG, "IN RANGE TRYING TO CONNECT");
                             Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-                            presenceDetectionService.inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
-//                            inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
+
+//                           presenceDetectionService.inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
+//                           inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
+                            String input = JsonParser.detectionInputToJson(APIKEY,new ScanResponse(beacon, userId, Range.IN));
+                            presenceDetectionService.sendPresenceDetectionRequest(input);
 
                         } else {
                             Log.d(TAG, "IN RANGE BUT DOING NOTHING");
                         }
                         break;
                     case OUT:
-                        if (inRange.get()) {
-                            inRange.set(false);
+                        if (inRange.compareAndSet(true, false)) {
                             Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-                            presenceDetectionService.outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
+//                            presenceDetectionService.outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
 //                            outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
-                            Log.d(TAG, "OUT OF RANGE");
+                            presenceDetectionService.sendPresenceDetectionRequest(APIKEY, new ScanResponse(beacon, userId, Range.OUT));
+
+                            Log.d(TAG, "OUT OF RANGE TRYING TO CONNECT");
                         } else {
                             Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
                         }
@@ -137,6 +146,7 @@ public class BackgroundScanningService extends Service {
             return Range.IN;
         } else return Range.OUT;
     }
+
 
 //    public static void inRangeDetected(String apikey, ScanResponse scanResponse, Context context) {
 //        Log.d("IN RANGE DETECTED", "YAY");

@@ -66,7 +66,7 @@ public final class JsonParser {
         if (scanResponse.getRange().equals(Range.IN)) {
             jsonObject.addProperty("major", scanResponse.getBeacon().getMajor());
             jsonObject.addProperty("minor", scanResponse.getBeacon().getMinor());
-            jsonObject.addProperty("rssi", scanResponse.getBeacon().getRssi());
+            jsonObject.addProperty("rssi", String.valueOf( scanResponse.getBeacon().getRssi()));
         }
 
         jsonObject.addProperty("timestamp", scanResponse.getTimestamp());
