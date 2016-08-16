@@ -66,8 +66,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected String readUserId() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("id", Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id", "");
-        return id;
+        return sharedPreferences.getString("id", "");
     }
 
     protected List<Beacon> readBeacons() {

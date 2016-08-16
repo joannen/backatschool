@@ -42,8 +42,7 @@ public class SharedPreferencesService {
 
     protected String readUserId(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("id", Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id", "");
-        return id;
+       return sharedPreferences.getString("id", "");
     }
 
     protected List<Beacon> readBeacons(Context context) {
@@ -54,12 +53,10 @@ public class SharedPreferencesService {
             com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
 
             for (String s : jsonBeacons) {
-
                 JsonObject json = parser.parse(s).getAsJsonObject();
                 beacons.add(JsonParser.jsonToBeacon(json));
             }
         }
-
         return beacons;
     }
 
@@ -94,7 +91,4 @@ public class SharedPreferencesService {
         Set<String> devices = sharedPreferences.getStringSet("devices", null);
         return devices == null ? new ArrayList<String>() : new ArrayList<>(devices);
     }
-
-
-
 }

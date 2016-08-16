@@ -3,8 +3,6 @@ package se.theyellowbelliedmarmot.backatschool.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import se.theyellowbelliedmarmot.backatschool.service.Range;
-
 /**
  * Created by joanne on 22/06/16.
  */
@@ -12,12 +10,12 @@ public final class ScanResponse {
     private final Beacon beacon;
     private final String userId;
     private final String timestamp;
-    private final Range range;
+    private final boolean inRange;
 
-    public ScanResponse(Beacon beacon, String id, Range range) {
+    public ScanResponse(Beacon beacon, String id, boolean inRange) {
         this.beacon = beacon;
         this.userId = id;
-        this.range = range;
+        this.inRange = inRange;
         this.timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
     }
 
@@ -33,8 +31,8 @@ public final class ScanResponse {
         return timestamp;
     }
 
-    public Range getRange() {
-        return range;
+    public boolean inRange() {
+        return inRange;
     }
 
     @Override

@@ -41,7 +41,7 @@ public class BackgroundScanningService extends Service {
     private List<ScanFilter> scanFilters;
     private BluetoothLeScanner scanner;
     private List<String> subscribedBeacons;
-    private AtomicBoolean inRange;
+    private AtomicBoolean currentlyInRange;
     private String userId;
     private PresenceDetectionService presenceDetectionService;
     private Retrofit retrofit;
@@ -54,8 +54,7 @@ public class BackgroundScanningService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        inRange = new AtomicBoolean();
-
+        currentlyInRange = new AtomicBoolean();
         //get subscribed devices and scan only for them
         Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
         subscribedBeacons = new ArrayList<>(set);
@@ -71,11 +70,10 @@ public class BackgroundScanningService extends Service {
         setUpScan();
         userId = getSharedPreferences("id", Context.MODE_PRIVATE).getString("id", "");
         retrofit = new Retrofit.Builder().baseUrl(URLS.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-        presenceDetectionService = new PresenceDetectionService(this.getApplicationContext(), retrofit);
+        presenceDetectionService = new PresenceDetectionService(retrofit);
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
-
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
@@ -84,41 +82,34 @@ public class BackgroundScanningService extends Service {
 
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-
             Log.d(TAG, String.valueOf(result));
-            Range range = checkRSSI(result.getRssi());
+            boolean inRange = checkRSSIInRange(result.getRssi());
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
 
             if (manufacturerSpecificData.length > 10) {
-                switch (range) {
-                    case IN:
-                        if (inRange.compareAndSet(false, true)) {
-                            Log.d(TAG, "IN RANGE TRYING TO CONNECT");
-                            Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
+                if(inRange) {
+                    if (currentlyInRange.compareAndSet(false, true)) {
+                        Log.d(TAG, "IN RANGE TRYING TO CONNECT");
+                        Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
+                        String input = JsonParser.detectionInputToJson(APIKEY, new ScanResponse(beacon, userId, true));
+                        presenceDetectionService.inRangeDetected(input);
 
-//                           presenceDetectionService.inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
-//                           inRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.IN), getApplicationContext());
-                            String input = JsonParser.detectionInputToJson(APIKEY,new ScanResponse(beacon, userId, Range.IN));
-                            presenceDetectionService.sendPresenceDetectionRequest(input);
+                    } else {
+                        Log.d(TAG, "IN RANGE BUT DOING NOTHING");
+                    }
+                }
+                 else {
+                    if (currentlyInRange.compareAndSet(true, false)) {
+                        Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
+                        String input = JsonParser.detectionInputToJson(APIKEY,new ScanResponse(beacon, userId, false));
 
-                        } else {
-                            Log.d(TAG, "IN RANGE BUT DOING NOTHING");
-                        }
-                        break;
-                    case OUT:
-                        if (inRange.compareAndSet(true, false)) {
-                            Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-//                            presenceDetectionService.outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
-//                            outOfRangeDetected(APIKEY, new ScanResponse(beacon, userId, Range.OUT), getApplicationContext());
-                            presenceDetectionService.sendPresenceDetectionRequest(APIKEY, new ScanResponse(beacon, userId, Range.OUT));
+                        presenceDetectionService.outOfRangeDetected(input);
 
-                            Log.d(TAG, "OUT OF RANGE TRYING TO CONNECT");
-                        } else {
-                            Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
-                        }
-                        break;
-                    default:
-                        Log.d(TAG, "UNCLEAR");
+                        Log.d(TAG, "OUT OF RANGE TRYING TO CONNECT");
+                    } else {
+                        Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
+                    }
+
                 }
             }
         }
@@ -141,50 +132,10 @@ public class BackgroundScanningService extends Service {
         }
     }
 
-    private Range checkRSSI(int rssi) {
-        if (rssi <= -25 && rssi >= -45) {
-            return Range.IN;
-        } else return Range.OUT;
+    private boolean checkRSSIInRange(int rssi) {
+        return rssi <= -25 && rssi >= -45;
     }
 
 
-//    public static void inRangeDetected(String apikey, ScanResponse scanResponse, Context context) {
-//        Log.d("IN RANGE DETECTED", "YAY");
-//        String input = JsonParser.detectionInputToJson(apikey, scanResponse);
-//        Log.d(TAG, input);
-//        Ion.with(context).load(URLS.IN_RANGE)
-//                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-//                .setStringBody(input)
-//                .asJsonObject()
-//                .setCallback(new FutureCallback<JsonObject>() {
-//                    @Override
-//                    public void onCompleted(Exception e, JsonObject result) {
-//                        Log.d("result is null: ", String.valueOf(result == null));
-//                        if (result != null) {
-//                            Log.d("Result in Range: ", result.toString());
-//                        }
-//                    }
-//                });
-//    }
-//
-//    public static void outOfRangeDetected(String apikey, ScanResponse scanResponse, Context context) {
-//        Log.d("OUT OF RANGE DETECTED", "YAY");
-//
-//        String input = JsonParser.detectionInputToJson(apikey, scanResponse);
-//        Ion.with(context).load(URLS.OUT_OF_RANGE)
-//                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-//                .setStringBody(input)
-//                .asJsonObject()
-//                .setCallback(new FutureCallback<JsonObject>() {
-//                    @Override
-//                    public void onCompleted(Exception e, JsonObject result) {
-//                        Log.d("result is null: ", String.valueOf(result == null));
-//
-//                        if (result != null) {
-//                            Log.d("Result out of Range: ", result.toString());
-//                        }
-//                    }
-//                });
-//    }
 
 }

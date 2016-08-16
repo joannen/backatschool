@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
-import se.theyellowbelliedmarmot.backatschool.service.Range;
 
 import static junit.framework.Assert.assertTrue;
 

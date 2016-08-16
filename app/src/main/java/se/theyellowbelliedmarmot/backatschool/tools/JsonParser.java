@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
-import se.theyellowbelliedmarmot.backatschool.service.Range;
 
 /**
  * Created by joanne on 10/06/16.
@@ -18,8 +17,7 @@ public final class JsonParser {
         jsonObject.addProperty("api_key", apiKey);
         jsonObject.addProperty("first_name", firstName);
         jsonObject.addProperty("last_name", lastName);
-        String inputString = INPUT + jsonObject.toString();
-        return inputString;
+        return INPUT + jsonObject.toString();
     }
 
     public static String subscriptionInputToJson(String apiKey, String userId, String beaconUuid) {
@@ -40,12 +38,10 @@ public final class JsonParser {
         int rssi = jsonObject.get("rssi").getAsInt();
         String deviceAddress = jsonObject.get("device_address").getAsString();
 
-        beacon = new Beacon(uuid, major, minor, rssi, name, deviceAddress);
-        return beacon;
+        return new Beacon(uuid, major, minor, rssi, name, deviceAddress);
     }
 
     public static JsonObject beaconToJson(Beacon beacon) {
-
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", beacon.getName());
         jsonObject.addProperty("uuid", beacon.getUuid());
@@ -54,7 +50,6 @@ public final class JsonParser {
         jsonObject.addProperty("rssi", beacon.getRssi());
         jsonObject.addProperty("device_address", beacon.getDeviceAddress());
         return jsonObject;
-
     }
 
     public static String detectionInputToJson(String apikey, ScanResponse scanResponse) {
@@ -63,18 +58,13 @@ public final class JsonParser {
         jsonObject.addProperty("id_user", scanResponse.getUserId());
         jsonObject.addProperty("beacon_uuid", scanResponse.getBeacon().getUuid());
 
-        if (scanResponse.getRange().equals(Range.IN)) {
+        if (scanResponse.inRange()) {
             jsonObject.addProperty("major", scanResponse.getBeacon().getMajor());
             jsonObject.addProperty("minor", scanResponse.getBeacon().getMinor());
             jsonObject.addProperty("rssi", String.valueOf( scanResponse.getBeacon().getRssi()));
         }
 
         jsonObject.addProperty("timestamp", scanResponse.getTimestamp());
-
-
         return INPUT + jsonObject.toString();
-
     }
-
-
 }

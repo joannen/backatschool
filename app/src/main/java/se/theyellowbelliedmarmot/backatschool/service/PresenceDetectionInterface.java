@@ -15,7 +15,7 @@ public interface PresenceDetectionInterface {
     @POST("beacon_nearby")
     Call<ResponseBody> beaconInRange(@Body RequestBody body);
 
+    @Headers({"Content-Type: application/x-www-form-urlencoded"})
     @POST("beacon_outofrange")
     Call<ResponseBody> beaconOutOfRange(@Body RequestBody body);
-
 }
