@@ -37,7 +37,6 @@ public final class JsonParser {
         String uuid = jsonObject.get("uuid").getAsString();
         int rssi = jsonObject.get("rssi").getAsInt();
         String deviceAddress = jsonObject.get("device_address").getAsString();
-
         return new Beacon(uuid, major, minor, rssi, name, deviceAddress);
     }
 

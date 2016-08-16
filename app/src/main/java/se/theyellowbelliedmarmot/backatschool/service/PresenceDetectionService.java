@@ -2,13 +2,13 @@ package se.theyellowbelliedmarmot.backatschool.service;
 
 import android.util.Log;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import se.theyellowbelliedmarmot.backatschool.model.InRangeData;
+import se.theyellowbelliedmarmot.backatschool.model.OutOfRangeData;
 
 /**
  * Created by joanne on 22/06/16.
@@ -22,17 +22,17 @@ public final class PresenceDetectionService {
         this.retrofit = retrofit;
     }
 
-    public void inRangeDetected(String input) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), input);
+    public void inRangeDetected(InRangeData input) {
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), input);
         PresenceDetectionInterface presenceDetectionInterface = retrofit.create(PresenceDetectionInterface.class);
-        Call<ResponseBody> result = presenceDetectionInterface.beaconInRange(requestBody);
+        Call<ResponseBody> result = presenceDetectionInterface.beaconInRange(input);
         sendRequest(result);
     }
 
-    public void outOfRangeDetected(String input) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), input);
+    public void outOfRangeDetected(OutOfRangeData input) {
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), input);
         PresenceDetectionInterface presenceDetectionInterface = retrofit.create(PresenceDetectionInterface.class);
-        Call<ResponseBody> result = presenceDetectionInterface.beaconOutOfRange(requestBody);
+        Call<ResponseBody> result = presenceDetectionInterface.beaconOutOfRange(input);
         sendRequest(result);
     }
 

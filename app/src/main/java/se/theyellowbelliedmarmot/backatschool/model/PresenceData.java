@@ -3,12 +3,12 @@ package se.theyellowbelliedmarmot.backatschool.model;
 /**
  * Created by joanne on 16/08/16.
  */
-public class PresenceData {
+public abstract class PresenceData {
 
-    String api_key;
-    String id_user;
-    String beacon_uuid;
-    String timestamp;
+    private String api_key;
+    private String id_user;
+    private String beacon_uuid;
+    private String timestamp;
 
     public PresenceData(String api_key, String id_user, String beacon_uuid, String timestamp) {
         this.api_key = api_key;

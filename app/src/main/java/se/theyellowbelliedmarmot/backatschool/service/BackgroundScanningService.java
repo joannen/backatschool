@@ -14,7 +14,9 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,6 +25,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
+import se.theyellowbelliedmarmot.backatschool.model.InRangeData;
+import se.theyellowbelliedmarmot.backatschool.model.OutOfRangeData;
 import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 import se.theyellowbelliedmarmot.backatschool.tools.Utility;
@@ -91,8 +95,9 @@ public class BackgroundScanningService extends Service {
                     if (currentlyInRange.compareAndSet(false, true)) {
                         Log.d(TAG, "IN RANGE TRYING TO CONNECT");
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-                        String input = JsonParser.detectionInputToJson(APIKEY, new ScanResponse(beacon, userId, true));
-                        presenceDetectionService.inRangeDetected(input);
+//                        String input = JsonParser.detectionInputToJson(APIKEY, new ScanResponse(beacon, userId, true));
+                        InRangeData inRangeData = new InRangeData(APIKEY, userId, beacon.getUuid(), new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()),beacon.getMajor(), beacon.getMinor());
+                        presenceDetectionService.inRangeDetected(inRangeData);
 
                     } else {
                         Log.d(TAG, "IN RANGE BUT DOING NOTHING");
@@ -101,9 +106,9 @@ public class BackgroundScanningService extends Service {
                  else {
                     if (currentlyInRange.compareAndSet(true, false)) {
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-                        String input = JsonParser.detectionInputToJson(APIKEY,new ScanResponse(beacon, userId, false));
-
-                        presenceDetectionService.outOfRangeDetected(input);
+//                        String input = JsonParser.detectionInputToJson(APIKEY,new ScanResponse(beacon, userId, false));
+                        OutOfRangeData outOfRangeData = new OutOfRangeData(APIKEY, userId, beacon.getUuid(),  new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+                        presenceDetectionService.outOfRangeDetected(outOfRangeData);
 
                         Log.d(TAG, "OUT OF RANGE TRYING TO CONNECT");
                     } else {
