@@ -73,7 +73,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected List<Beacon> readBeacons() {
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("beacons", Context.MODE_PRIVATE);
         Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
         List<Beacon> beacons = new ArrayList<>();
         if (jsonBeacons != null) {
@@ -122,7 +122,6 @@ public class BaseActivity extends AppCompatActivity {
     public void startSubscriptionListActivity(MenuItem item) {
         SharedPreferences sharedPreferences = this.getSharedPreferences("beacons", Context.MODE_PRIVATE);
         Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
-        List<Beacon> beacons = new ArrayList<>();
         if (jsonBeacons != null) {
             Intent intent = new Intent(this, SubscribedBeacons.class);
             startActivity(intent);

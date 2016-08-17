@@ -11,11 +11,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import se.theyellowbelliedmarmot.backatschool.R;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.User;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
@@ -63,29 +63,18 @@ public class MainActivity extends BaseActivity {
                             boolean validInput = Validator.validateUserInput(user);
 
                             if(validInput){
-<<<<<<< HEAD
                                 try {
-=======
-                                Log.d(TAG, "Jaadå");
-                                try {
-                                    Toast.makeText(getApplicationContext(), "Correct user input", Toast.LENGTH_LONG).show();
->>>>>>> acb12e987b0dc112e826e5ce7f708085d7114970
                                     saveUser(firstName, lastName);
                                     registerUser(user, getApplicationContext());
                                     Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
                                     startActivity(intent);
-<<<<<<< HEAD
                                 } catch (Exception e) {
-=======
-                                } catch (Exception e){
->>>>>>> acb12e987b0dc112e826e5ce7f708085d7114970
                                     e.printStackTrace();
                                 }
                             }else{
                                 Toast.makeText(getApplicationContext(), "Wrong user input", Toast.LENGTH_LONG).show();
                                 finish();
                             }
-
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -135,9 +124,4 @@ public class MainActivity extends BaseActivity {
                     }
                 });
     }
-<<<<<<< HEAD
-=======
-
-
->>>>>>> acb12e987b0dc112e826e5ce7f708085d7114970
 }

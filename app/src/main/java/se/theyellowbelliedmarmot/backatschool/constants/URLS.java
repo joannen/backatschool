@@ -10,3 +10,4 @@ public class URLS {
     public static final String OUT_OF_RANGE = "http://beacons.zenzor.io/sys/api/beacon_outofrange";
     public static final String BASE_URL = "http://beacons.zenzor.io/sys/api/";
 }
+
