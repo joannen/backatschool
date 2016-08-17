@@ -1,6 +1,7 @@
 package se.theyellowbelliedmarmot.backatschool.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -8,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -86,7 +89,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void saveBeacon(List<Beacon> beaconList) {
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("beacons", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Set<String> jsonBeacons = new HashSet<>();
 
@@ -111,9 +114,29 @@ public class BaseActivity extends AppCompatActivity {
         editor.commit();
     }
 
-    protected List<String> readDeviceAddresses() {
+    public void startScanActivity(MenuItem item){
+        Intent intent = new Intent(this, ScanActiveBeacon.class);
+        startActivity(intent);
+    }
+
+    public void startSubscriptionListActivity(MenuItem item) {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("beacons", Context.MODE_PRIVATE);
+        Set<String> jsonBeacons = sharedPreferences.getStringSet("subscribed_beacons", null);
+        List<Beacon> beacons = new ArrayList<>();
+        if (jsonBeacons != null) {
+            Intent intent = new Intent(this, SubscribedBeacons.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "Subscribed Beaconlist is empty!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+        protected List<String> readDeviceAddresses() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("devices", Context.MODE_PRIVATE);
         Set<String> devices = sharedPreferences.getStringSet("devices", null);
         return devices == null ? new ArrayList<String>() : new ArrayList<>(devices);
     }
+
+
 }

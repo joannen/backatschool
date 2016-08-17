@@ -2,13 +2,15 @@
 <resources>
   <color name="deepBlue">#355C7D</color>
   <color name="deepPurple">#6C5B7B</color>
-  <color name="pirPul">#C06C84</color>
-  <color name="pinkRed">#F67280</color>
+  <color name="pirPul">#8b3a62</color>
+  <color name="pinkRed">#eee77a86</color>
   <color name="flamingo">#F8B195</color>
   <color name="textDark">#353535</color>
   <color name="textLight">#F6F6F6</color>
   <color name="lightGray">#dddddd</color>
   <color name="middleGray">#8d8d8d</color>
   <color name="darkGreen">#35687d</color>
-  <color name="lightGreen">#99cccc</color>
+  <color name="lightGreen">#80cccc</color>
+  <color name="transOne">#4D8d8d8d</color>
+  <color name="transTwo">#808d8d8d</color>
 </resources>

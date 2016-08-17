@@ -1,15 +1,17 @@
 package se.theyellowbelliedmarmot.backatschool.model;
 
+import java.io.Serializable;
+
 /**
  * Created by joanne on 02/06/16.
  */
-public final class Beacon implements Comparable<Beacon> {
+public final class Beacon implements Comparable<Beacon>, Serializable {
 
     private final String uuid;
     private final String major;
     private final String minor;
-    private final int rssi;
-    private final String name;
+    private int rssi;
+    private String name;
     private final String deviceAddress;
 
     public Beacon(String uuid, String major, String minor, int rssi, String name, String deviceAddress) {
@@ -19,6 +21,10 @@ public final class Beacon implements Comparable<Beacon> {
         this.rssi = rssi;
         this.name = name;
         this.deviceAddress = deviceAddress;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {

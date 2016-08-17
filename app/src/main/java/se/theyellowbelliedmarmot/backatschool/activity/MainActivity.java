@@ -19,6 +19,7 @@ import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.User;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
+import se.theyellowbelliedmarmot.backatschool.tools.Validator;
 
 public class MainActivity extends BaseActivity {
 
@@ -59,13 +60,20 @@ public class MainActivity extends BaseActivity {
                             firstName = authFirstName.getText().toString();
                             lastName = authLastName.getText().toString();
                             user = new User(firstName, lastName);
-                            try {
-                                saveUser(firstName, lastName);
-                                registerUser(user, getApplicationContext());
-                                Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
-                                startActivity(intent);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            boolean validInput = Validator.validateUserInput(user);
+
+                            if(validInput){
+                                try {
+                                    saveUser(firstName, lastName);
+                                    registerUser(user, getApplicationContext());
+                                    Intent intent = new Intent(getApplicationContext(), ScanActiveBeacon.class);
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                Toast.makeText(getApplicationContext(), "Wrong user input", Toast.LENGTH_LONG).show();
+                                finish();
                             }
                         }
                     })

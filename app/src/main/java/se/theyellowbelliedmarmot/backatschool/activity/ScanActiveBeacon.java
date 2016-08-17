@@ -35,7 +35,6 @@ import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 public class ScanActiveBeacon extends BaseActivity {
 
     private static final long SCAN_PERIOD = 5000;
-    private static final String BEACON_NAME = "closebeacon.com";
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 0;
     private BluetoothLeScanner scanner;
@@ -53,6 +52,7 @@ public class ScanActiveBeacon extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_active_beacon);
+        setTitle(getString(R.string.activity_title_scan));
 
         handler = new Handler();
         beacons = new ArrayList<>();
@@ -70,7 +70,7 @@ public class ScanActiveBeacon extends BaseActivity {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();
         scanFilters = new ArrayList<>();
-        ScanFilter filter = new ScanFilter.Builder().setDeviceName(BEACON_NAME).build();
+        ScanFilter filter = new ScanFilter.Builder().setDeviceName(getString(R.string.beacon_name)).build();
         scanFilters.add(filter);
     }
 
@@ -144,7 +144,6 @@ public class ScanActiveBeacon extends BaseActivity {
     }
 
     private void addBeaconToList(Beacon beacon) {
-
         if (beacons.contains(beacon)) {
             beacons.remove(beacon);
         }

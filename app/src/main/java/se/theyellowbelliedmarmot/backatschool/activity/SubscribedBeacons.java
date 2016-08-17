@@ -17,11 +17,11 @@ import java.util.List;
 import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
-import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
+import se.theyellowbelliedmarmot.backatschool.model.adapter.SubscribedBeaconAdapter;
 import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
-public class SubscribedBeacons extends BaseActivity {
+public class SubscribedBeacons extends BaseActivity implements BeaconNameFragment.NoticeDialogListener {
 
     private List<Beacon> existingBeacons;
     private List<String> devices;
@@ -33,11 +33,12 @@ public class SubscribedBeacons extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscribed_beacons);
+        setTitle(getString(R.string.activity_title_subscribed));
 
         //get subscribed beacons from shared preferences
         existingBeacons = readBeacons();
 
-        if (readDeviceAddresses() == null) {
+        if (readDeviceAddresses().isEmpty()) {
             devices = new ArrayList<>();
         } else {
             devices = readDeviceAddresses();
@@ -45,7 +46,7 @@ public class SubscribedBeacons extends BaseActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.subscribed_beacon_list);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new BeaconAdapter(this, existingBeacons);
+        adapter = new SubscribedBeaconAdapter(this, existingBeacons);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -100,6 +101,19 @@ public class SubscribedBeacons extends BaseActivity {
         if (!existingBeacons.contains(beacon)) {
             existingBeacons.add(beacon);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onDialogPositiveClick(android.app.DialogFragment fragment, Beacon beacon, String name) {
+        for (Beacon b : existingBeacons) {
+            if (b.equals(beacon)) {
+                existingBeacons.remove(b);
+                Beacon newBeacon = new Beacon(beacon.getUuid(), beacon.getMajor(), beacon.getMinor(), 1, name, beacon.getDeviceAddress());
+                existingBeacons.add(newBeacon);
+                saveBeacon(existingBeacons);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 }
