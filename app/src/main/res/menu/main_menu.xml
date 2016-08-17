@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+<<<<<<< HEAD
     <item
         android:id="@+id/scan_active"
         android:title="@string/beacon_scan"
@@ -19,3 +20,12 @@
                 <!--android:id="@+id/subscription_list"-->
                 <!--android:title="subscription_list"/>-->
 <!--</menu>-->
+=======
+            <item
+                android:id="@+id/scan_active"
+                android:title="Scan Activity"/>
+            <item
+                android:id="@+id/subscription_list"
+                android:title="Subscription list"/>
+</menu>
+>>>>>>> acb12e987b0dc112e826e5ce7f708085d7114970
