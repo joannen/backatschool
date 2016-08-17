@@ -78,7 +78,6 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
 
         @Override
         public void onClick(View view) {
-            Log.d("CLICKED!", "TJOHOO");
             Intent intent = new Intent(view.getContext(), SubscribedBeacons.class);
             intent.putExtra("uuid", uuidView.getText());
             intent.putExtra("major", majorView.getText());
@@ -88,7 +87,6 @@ public final class BeaconAdapter extends RecyclerView.Adapter<BeaconAdapter.Beac
             intent.putExtra("deviceAddress", addressView.getText());
             intent.putExtra("has_beacon", true);
             view.getContext().startActivity(intent);
-
         }
     }
 }

@@ -27,8 +27,6 @@ import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.InRangeData;
 import se.theyellowbelliedmarmot.backatschool.model.OutOfRangeData;
-import se.theyellowbelliedmarmot.backatschool.model.ScanResponse;
-import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 
 /**
@@ -70,7 +68,6 @@ public class BackgroundScanningService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "SERVICE STARTED");
         setUpScan();
         userId = getSharedPreferences("id", Context.MODE_PRIVATE).getString("id", "");
         retrofit = new Retrofit.Builder().baseUrl(URLS.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
@@ -95,7 +92,6 @@ public class BackgroundScanningService extends Service {
                     if (currentlyInRange.compareAndSet(false, true)) {
                         Log.d(TAG, "IN RANGE TRYING TO CONNECT");
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-//                        String input = JsonParser.detectionInputToJson(APIKEY, new ScanResponse(beacon, userId, true));
                         InRangeData inRangeData = new InRangeData(APIKEY, userId, beacon.getUuid(), new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()),beacon.getMajor(), beacon.getMinor());
                         presenceDetectionService.inRangeDetected(inRangeData);
 
@@ -106,7 +102,6 @@ public class BackgroundScanningService extends Service {
                  else {
                     if (currentlyInRange.compareAndSet(true, false)) {
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
-//                        String input = JsonParser.detectionInputToJson(APIKEY,new ScanResponse(beacon, userId, false));
                         OutOfRangeData outOfRangeData = new OutOfRangeData(APIKEY, userId, beacon.getUuid(),  new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
                         presenceDetectionService.outOfRangeDetected(outOfRangeData);
 
@@ -114,7 +109,6 @@ public class BackgroundScanningService extends Service {
                     } else {
                         Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
                     }
-
                 }
             }
         }

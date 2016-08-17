@@ -77,13 +77,11 @@ public class BaseActivity extends AppCompatActivity {
             com.google.gson.JsonParser parser = new com.google.gson.JsonParser();
 
             for (String s : jsonBeacons) {
-
                 JsonObject json = parser.parse(s).getAsJsonObject();
                 Log.d(TAG, json.toString());
                 beacons.add(JsonParser.jsonToBeacon(json));
             }
         }
-
         return beacons;
     }
 

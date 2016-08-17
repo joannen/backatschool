@@ -17,7 +17,6 @@ public final class PresenceDetectionService {
 
     private Retrofit retrofit;
     private static final String TAG = PresenceDetectionService.class.getSimpleName();
-
     public PresenceDetectionService(Retrofit retrofit) {
         this.retrofit = retrofit;
     }
@@ -30,7 +29,6 @@ public final class PresenceDetectionService {
     }
 
     public void outOfRangeDetected(OutOfRangeData input) {
-//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), input);
         PresenceDetectionInterface presenceDetectionInterface = retrofit.create(PresenceDetectionInterface.class);
         Call<ResponseBody> result = presenceDetectionInterface.beaconOutOfRange(input);
         sendRequest(result);
@@ -41,7 +39,8 @@ public final class PresenceDetectionService {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String response_value = response.message();
-                Log.d(TAG, "RETROFIT RESPONSE: " + response_value);
+                int response_code = response.code();
+                Log.d(TAG, "RETROFIT RESPONSE: " + response_value + "\nCODE: " + response_code);
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
@@ -49,6 +48,4 @@ public final class PresenceDetectionService {
             }
         });
     }
-
-
 }

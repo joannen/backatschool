@@ -172,5 +172,4 @@ public class ScanActiveBeacon extends BaseActivity {
             return (beaconOne.getRssi() > beaconTwo.getRssi() ? -1 : (beaconOne.getRssi() == beaconTwo.getRssi() ? 0 : 1));
         }
     };
-
 }
