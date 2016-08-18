@@ -4,12 +4,12 @@
     <item
         android:id="@+id/scan_beacon_action"
         app:showAsAction="always"
-        android:title="Scan"
+        android:title="@string/scan_menu_scan"
         android:onClick="displayList"/>
 
     <item
         android:id="@+id/stop_scan_action"
         app:showAsAction="always"
-        android:title="Stop"
+        android:title="@string/scan_menu_stop"
         android:onClick="stopScan"/>
 </menu>

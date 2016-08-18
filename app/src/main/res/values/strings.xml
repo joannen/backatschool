@@ -7,5 +7,8 @@
     <string name="beacon_name">closebeacon.com</string>
     <string name="activity_title_scan">Beacon scan</string>
     <string name="activity_title_subscribed">Subscribed Beacons</string>
+    <string name="beacon_row_default_value">Beacon</string>
+    <string name="scan_menu_scan">Scan</string>
+    <string name="scan_menu_stop">Stop</string>
 
 </resources>

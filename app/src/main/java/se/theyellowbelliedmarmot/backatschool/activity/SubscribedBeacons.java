@@ -80,7 +80,7 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
         startService(intent);
     }
 
-    public void subscribeToBeacon(String user_id, String beaconUuid, Context context) {
+    private void subscribeToBeacon(String user_id, String beaconUuid, Context context) {
         String input = JsonParser.subscriptionInputToJson(APIKEY, user_id, beaconUuid);
 
         Ion.with(context).load(URLS.SUBSCRIBE_BEACON)

@@ -24,8 +24,7 @@ public final class JsonParser {
         jsonObject.addProperty("api_key", apiKey);
         jsonObject.addProperty("id_user", userId);
         jsonObject.addProperty("beacon_uuid", beaconUuid);
-        String inputString = INPUT + jsonObject.toString();
-        return inputString;
+        return INPUT + jsonObject.toString();
     }
 
     public static Beacon jsonToBeacon(JsonObject jsonObject) {

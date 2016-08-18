@@ -11,11 +11,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import se.theyellowbelliedmarmot.backatschool.R;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import se.theyellowbelliedmarmot.backatschool.R;
 import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.User;
 import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
@@ -33,7 +33,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         //first check for BLEsupport
-
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "BLE Not Supported",
                     Toast.LENGTH_SHORT).show();

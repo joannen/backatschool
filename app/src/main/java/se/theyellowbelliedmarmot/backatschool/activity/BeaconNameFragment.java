@@ -25,7 +25,7 @@ public class BeaconNameFragment extends DialogFragment {
     Beacon beacon;
 
     public interface NoticeDialogListener{
-        public void onDialogPositiveClick(DialogFragment fragment, Beacon beacon, String name);
+        void onDialogPositiveClick(DialogFragment fragment, Beacon beacon, String name);
     }
 
     @Override

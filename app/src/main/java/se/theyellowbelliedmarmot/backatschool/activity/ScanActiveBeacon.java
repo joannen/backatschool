@@ -98,10 +98,6 @@ public class ScanActiveBeacon extends BaseActivity {
             }
         }
 
-        @Override
-        public void onScanFailed(int errorCode) {
-            super.onScanFailed(errorCode);
-        }
     };
 
     private void scanBeacon(boolean scan) {
@@ -118,11 +114,6 @@ public class ScanActiveBeacon extends BaseActivity {
         } else {
             scanner.stopScan(scanCallback);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

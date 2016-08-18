@@ -11,8 +11,7 @@ import se.theyellowbelliedmarmot.backatschool.service.BackgroundScanningService;
  */
 public class BootReceiver extends BroadcastReceiver {
 
-    private final static String TAG = BootReceiver.class.getSimpleName();
-
+    //starts scanning service when phone turned on
     @Override
     public void onReceive(Context context, Intent intent) {
         context.startService(new Intent(context, BackgroundScanningService.class));

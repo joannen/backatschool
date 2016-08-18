@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/uuid_text"
         style="@style/MainTextViewTheme"
-        android:text="Beacon"/>
+        android:text="@string/beacon_row_default_value"/>
 
     <!--<RelativeLayout-->
         <!--android:layout_width="fill_parent"-->
@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/major_text"
             style="@style/RowTextViewStyle"
-            android:text="Beacon"
+            android:text="@string/beacon_row_default_value"
             android:layout_alignParentLeft="true"
             />
 
@@ -28,7 +28,7 @@
             android:id="@+id/minor_text"
             style="@style/RowTextViewStyle"
             android:layout_below="@id/major_text"
-            android:text="Beacon"
+            android:text="@string/beacon_row_default_value"
             android:layout_alignParentLeft="true"
             />
 
@@ -37,7 +37,7 @@
             style="@style/RowTextViewStyle"
             android:layout_below="@id/minor_text"
             android:layout_alignParentLeft="true"
-            android:text="Beacon"
+            android:text="@string/beacon_row_default_value"
             />
 
         <TextView

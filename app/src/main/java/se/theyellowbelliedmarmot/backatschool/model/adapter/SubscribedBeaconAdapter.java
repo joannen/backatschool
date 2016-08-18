@@ -33,8 +33,7 @@ public final class SubscribedBeaconAdapter extends RecyclerView.Adapter<Subscrib
     public SubscribedBeaconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.subscribed_beacon_row, parent, false);
-        SubscribedBeaconViewHolder viewHolder = new SubscribedBeaconViewHolder(view);
-        return viewHolder;
+        return new SubscribedBeaconViewHolder(view);
     }
 
     @Override
