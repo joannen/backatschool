@@ -10,6 +10,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import se.theyellowbelliedmarmot.backatschool.bluetooth.BLEService;
 import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.InRangeData;
@@ -47,6 +49,7 @@ public class BackgroundScanningService extends Service {
     private String userId;
     private PresenceDetectionService presenceDetectionService;
     private Retrofit retrofit;
+    private BLEService bleService;
 
     @Nullable
     @Override
@@ -58,20 +61,27 @@ public class BackgroundScanningService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         currentlyInRange = new AtomicBoolean();
         //get subscribed devices and scan only for them
-        Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
-        subscribedBeacons = new ArrayList<>(set);
-        setUpFilters(subscribedBeacons);
-        scanner.startScan(scanFilters, scanSettings, scanCallback);
+//        Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
+//        subscribedBeacons = new ArrayList<>(set);
+//        scanFilters= setUpFilters(subscribedBeacons);
+        bleService.getScanner().startScan(scanFilters,bleService.getScanSettings(), scanCallback);
 
         return START_STICKY;
     }
 
     @Override
     public void onCreate() {
-        setUpScan();
+//        setUpScan();
         userId = getSharedPreferences("id", Context.MODE_PRIVATE).getString("id", "");
         retrofit = new Retrofit.Builder().baseUrl(URLS.BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         presenceDetectionService = new PresenceDetectionService(retrofit);
+        Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
+
+        subscribedBeacons = new ArrayList<>(set);
+
+        scanFilters = setUpFilters(subscribedBeacons);
+        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bleService = new BLEService(new Handler(), bluetoothManager,scanFilters, ScanSettings.SCAN_MODE_LOW_POWER, getApplicationContext());
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -114,21 +124,22 @@ public class BackgroundScanningService extends Service {
         }
     };
 
-    private void setUpScan() {
-        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
-        scanner = bluetoothAdapter.getBluetoothLeScanner();
-        scanSettings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-                .build();
-    }
+//    private void setUpScan() {
+//        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//        bluetoothAdapter = bluetoothManager.getAdapter();
+//        scanner = bluetoothAdapter.getBluetoothLeScanner();
+//        scanSettings = new ScanSettings.Builder()
+//                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+//                .build();
+//    }
 
-    private void setUpFilters(List<String> beaconList) {
+    private List<ScanFilter> setUpFilters(List<String> beaconList) {
         scanFilters = new ArrayList<>();
         for (String b : beaconList) {
             ScanFilter filter = new ScanFilter.Builder().setDeviceAddress(b).build();
             scanFilters.add(filter);
         }
+        return scanFilters;
     }
 
     private boolean checkRSSIInRange(int rssi) {

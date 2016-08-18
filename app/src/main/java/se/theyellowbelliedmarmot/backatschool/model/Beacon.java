@@ -43,6 +43,10 @@ public final class Beacon implements Comparable<Beacon>, Serializable {
         return minor;
     }
 
+    public void setRssi(int rssi) {
+        this.rssi = rssi;
+    }
+
     public int getRssi() {
         return rssi;
     }

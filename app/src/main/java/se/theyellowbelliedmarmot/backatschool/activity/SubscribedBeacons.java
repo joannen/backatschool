@@ -1,8 +1,14 @@
 package se.theyellowbelliedmarmot.backatschool.activity;
 
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.theyellowbelliedmarmot.backatschool.R;
+import se.theyellowbelliedmarmot.backatschool.bluetooth.BLEService;
 import se.theyellowbelliedmarmot.backatschool.constants.URLS;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.SubscribedBeaconAdapter;
@@ -28,6 +35,8 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private BLEService bleService;
+    private List<ScanFilter> scanFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,11 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
         } else {
             devices = readDeviceAddresses();
         }
+        scanFilters = setUpFilters(devices);
+        BluetoothManager manager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bleService = new BLEService(new Handler(),manager, scanFilters, ScanSettings.SCAN_MODE_LOW_LATENCY, getApplicationContext());
+        bleService.scanBeacon(true, scanCallback);
+//        bleService.getScanner().stopScan(scanCallback);
 
         recyclerView = (RecyclerView) findViewById(R.id.subscribed_beacon_list);
         layoutManager = new LinearLayoutManager(this);
@@ -71,14 +85,28 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
             devices.add(beacon.getDeviceAddress());
             saveDeviceAddress(devices);
 
-        } else {
-            //just update recyclerview
-            adapter.notifyDataSetChanged();
         }
+        //  update recyclerview
+        adapter.notifyDataSetChanged();
         //start background scanning service
         Intent intent = new Intent(this, BackgroundScanningService.class);
         startService(intent);
+
     }
+
+    private final ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            for (Beacon b:existingBeacons){
+                if (result.getDevice().getAddress().equals(b.getDeviceAddress())){
+                    Log.d(TAG, "EQUALS!!");
+                    b.setRssi(result.getRssi());
+                }
+            }saveBeacon(existingBeacons);
+            adapter.notifyDataSetChanged();
+        }
+
+    };
 
     private void subscribeToBeacon(String user_id, String beaconUuid, Context context) {
         String input = JsonParser.subscriptionInputToJson(APIKEY, user_id, beaconUuid);
@@ -100,7 +128,7 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
     private void addBeaconToSubscriptionList(Beacon beacon) {
         if (!existingBeacons.contains(beacon)) {
             existingBeacons.add(beacon);
-            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
         }
     }
 
@@ -108,12 +136,22 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
     public void onDialogPositiveClick(android.app.DialogFragment fragment, Beacon beacon, String name) {
         for (Beacon b : existingBeacons) {
             if (b.equals(beacon)) {
-                existingBeacons.remove(b);
-                Beacon newBeacon = new Beacon(beacon.getUuid(), beacon.getMajor(), beacon.getMinor(), 1, name, beacon.getDeviceAddress());
-                existingBeacons.add(newBeacon);
+//                existingBeacons.remove(b);
+//                Beacon newBeacon = new Beacon(beacon.getUuid(), beacon.getMajor(), beacon.getMinor(), 1, name, beacon.getDeviceAddress());
+                b.setName(name);
+//                existingBeacons.add(newBeacon);
                 saveBeacon(existingBeacons);
                 adapter.notifyDataSetChanged();
             }
         }
+    }
+
+    private List<ScanFilter> setUpFilters(List<String> beaconList) {
+        List<ScanFilter> scanFilters = new ArrayList<>();
+        for (String b : beaconList) {
+            ScanFilter filter = new ScanFilter.Builder().setDeviceAddress(b).build();
+            scanFilters.add(filter);
+        }
+        return scanFilters;
     }
 }

@@ -28,6 +28,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import se.theyellowbelliedmarmot.backatschool.R;
+import se.theyellowbelliedmarmot.backatschool.bluetooth.BLEService;
 import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 import se.theyellowbelliedmarmot.backatschool.model.adapter.BeaconAdapter;
 import se.theyellowbelliedmarmot.backatschool.tools.Utility;
@@ -47,6 +48,8 @@ public class ScanActiveBeacon extends BaseActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private BLEService bleService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,16 @@ public class ScanActiveBeacon extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        setUpBLEScanning();
+        bluetoothManager =  (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+        List<ScanFilter> scanFilters = new ArrayList<>();
+        ScanFilter filter = new ScanFilter.Builder().setDeviceName(getString(R.string.beacon_name)).build();
+        scanFilters.add(filter);
+
+        bleService = new BLEService(new Handler(), bluetoothManager,scanFilters, ScanSettings.SCAN_MODE_LOW_LATENCY , getApplicationContext());
+
+
+//        setUpBLEScanning();
     }
 
     @Override
@@ -81,7 +93,7 @@ public class ScanActiveBeacon extends BaseActivity {
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
         }
-        scanBeacon(true);
+        bleService.scanBeacon(true, scanCallback);
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -100,30 +112,42 @@ public class ScanActiveBeacon extends BaseActivity {
 
     };
 
-    private void scanBeacon(boolean scan) {
-        if (scan) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scanner.stopScan(scanCallback);
-                }
-            }, SCAN_PERIOD);
-            scanner.startScan(scanFilters, scanSettings, scanCallback);
-            // Test this
-            Toast.makeText(getApplicationContext(), "Scanning for beacons", Toast.LENGTH_SHORT).show();
-        } else {
-            scanner.stopScan(scanCallback);
-        }
-    }
+//    private void scanBeacon(boolean scan, ScanCallback scanCallback) {
+//        if (scan) {
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    scanner.stopScan(scanCallback);
+//                }
+//            }, SCAN_PERIOD);
+//            scanner.startScan(scanFilters, scanSettings, scanCallback);
+//            // Test this
+//            Toast.makeText(getApplicationContext(), "Scanning for beacons", Toast.LENGTH_SHORT).show();
+//        } else {
+//            scanner.stopScan(scanCallback);
+//        }
 
-    @Override
+
+
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//        }
+
+// @Override
     protected void onResume() {
         super.onResume();
-        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+        if ( bleService.getBluetoothAdapter() == null || !bleService.getBluetoothAdapter().isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
     }
+
+
 
     private void addBeaconToList(Beacon beacon) {
         if (beacons.contains(beacon)) {
@@ -135,7 +159,7 @@ public class ScanActiveBeacon extends BaseActivity {
     }
 
     public void stopScan(MenuItem item) {
-        scanBeacon(false);
+        bleService.scanBeacon(false, scanCallback);
         Toast.makeText(getApplicationContext(), "Stopped scan for beacons", Toast.LENGTH_SHORT).show();
     }
 
@@ -154,16 +178,16 @@ public class ScanActiveBeacon extends BaseActivity {
         }
     };
 
-    private void setUpBLEScanning(){
-        handler = new Handler();
-        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
-        scanner = bluetoothAdapter.getBluetoothLeScanner();
-        scanSettings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build();
-        scanFilters = new ArrayList<>();
-        ScanFilter filter = new ScanFilter.Builder().setDeviceName(getString(R.string.beacon_name)).build();
-        scanFilters.add(filter);
-    }
+//    private void setUpBLEScanning(){
+//        handler = new Handler();
+//        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//        bluetoothAdapter = bluetoothManager.getAdapter();
+//        scanner = bluetoothAdapter.getBluetoothLeScanner();
+//        scanSettings = new ScanSettings.Builder()
+//                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+//                .build();
+//        scanFilters = new ArrayList<>();
+//        ScanFilter filter = new ScanFilter.Builder().setDeviceName(getString(R.string.beacon_name)).build();
+//        scanFilters.add(filter);
+
 }

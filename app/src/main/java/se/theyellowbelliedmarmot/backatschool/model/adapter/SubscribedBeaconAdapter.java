@@ -75,7 +75,11 @@ public final class SubscribedBeaconAdapter extends RecyclerView.Adapter<Subscrib
             uuidView.setText(beacon.getUuid());
             majorView.setText(beacon.getMajor());
             minorView.setText(beacon.getMinor());
-            nameView.setText(beacon.getName());
+            if(beacon.getRssi()<= -25 && beacon.getRssi() >= -45){
+               nameView.setText(beacon.getName() + "      " + "IN RANGE");
+            }else{
+                nameView.setText(beacon.getName());
+            }
             addressView.setText(beacon.getDeviceAddress());
         }
 
