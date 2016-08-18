@@ -3,7 +3,7 @@ package se.theyellowbelliedmarmot.backatschool.model;
 /**
  * Created by TheYellowBelliedMarmot on 2016-06-01.
  */
-public class User {
+public final class User {
 
     private final String firstName;
     private final String lastName;

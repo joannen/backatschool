@@ -18,7 +18,7 @@ import se.theyellowbelliedmarmot.backatschool.model.Beacon;
 /**
  * Created by TheYellowBelliedMarmot on 2016-06-27.
  */
-public class SubscribedBeaconAdapter extends RecyclerView.Adapter<SubscribedBeaconAdapter.SubscribedBeaconViewHolder>{
+public final class SubscribedBeaconAdapter extends RecyclerView.Adapter<SubscribedBeaconAdapter.SubscribedBeaconViewHolder>{
 
     private List<Beacon> beacons;
     private Context context;

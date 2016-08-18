@@ -28,7 +28,7 @@ import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
  */
 
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     static final String TAG = "LOGTAG";
     static final String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";

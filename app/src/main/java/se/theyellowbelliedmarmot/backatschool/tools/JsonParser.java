@@ -29,7 +29,6 @@ public final class JsonParser {
     }
 
     public static Beacon jsonToBeacon(JsonObject jsonObject) {
-        Beacon beacon;
         String name = jsonObject.get("name").getAsString();
         String major = jsonObject.get("major").getAsString();
         String minor = jsonObject.get("minor").getAsString();

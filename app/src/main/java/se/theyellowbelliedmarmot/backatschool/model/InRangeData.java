@@ -3,7 +3,7 @@ package se.theyellowbelliedmarmot.backatschool.model;
 /**
  * Created by joanne on 16/08/16.
  */
-public class InRangeData extends PresenceData {
+public final class InRangeData extends PresenceData {
 
     private String major;
     private String minor;
