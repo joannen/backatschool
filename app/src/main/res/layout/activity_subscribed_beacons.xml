@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/ScanTheme"
-    tools:context="se.theyellowbelliedmarmot.backatschool.activity.SubscribedBeacons">
-    <!--android:background="@drawable/backpic">-->
+    tools:context="se.theyellowbelliedmarmot.backatschool.activity.SubscribedBeacons"
+    android:background="@drawable/bpic">
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/subscribed_beacon_list"
