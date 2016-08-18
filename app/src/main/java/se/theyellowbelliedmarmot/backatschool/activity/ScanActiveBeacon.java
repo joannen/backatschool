@@ -54,7 +54,6 @@ public class ScanActiveBeacon extends BaseActivity {
         setContentView(R.layout.activity_scan_active_beacon);
         setTitle(getString(R.string.activity_title_scan));
 
-        handler = new Handler();
         beacons = new ArrayList<>();
 
         recyclerView = (RecyclerView) findViewById(R.id.beacon_list);
@@ -63,15 +62,7 @@ public class ScanActiveBeacon extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
-        scanner = bluetoothAdapter.getBluetoothLeScanner();
-        scanSettings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build();
-        scanFilters = new ArrayList<>();
-        ScanFilter filter = new ScanFilter.Builder().setDeviceName(getString(R.string.beacon_name)).build();
-        scanFilters.add(filter);
+        setUpBLEScanning();
     }
 
     @Override
@@ -171,4 +162,17 @@ public class ScanActiveBeacon extends BaseActivity {
             return (beaconOne.getRssi() > beaconTwo.getRssi() ? -1 : (beaconOne.getRssi() == beaconTwo.getRssi() ? 0 : 1));
         }
     };
+
+    private void setUpBLEScanning(){
+        handler = new Handler();
+        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bluetoothAdapter = bluetoothManager.getAdapter();
+        scanner = bluetoothAdapter.getBluetoothLeScanner();
+        scanSettings = new ScanSettings.Builder()
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .build();
+        scanFilters = new ArrayList<>();
+        ScanFilter filter = new ScanFilter.Builder().setDeviceName(getString(R.string.beacon_name)).build();
+        scanFilters.add(filter);
+    }
 }

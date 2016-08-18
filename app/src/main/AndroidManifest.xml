@@ -5,12 +5,14 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
 
     <application
         android:allowBackup="true"
@@ -30,8 +32,14 @@
         <activity android:name=".activity.SubscribedBeacons" />
         <service android:name=".service.BackgroundScanningService"
             android:exported="false">
-
         </service>
+        <receiver android:name=".service.reciever.BootReciever">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>
