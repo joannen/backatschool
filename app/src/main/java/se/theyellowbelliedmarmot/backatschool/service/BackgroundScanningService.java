@@ -40,10 +40,7 @@ public class BackgroundScanningService extends Service {
     private static final String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
 
     private BluetoothManager bluetoothManager;
-    private BluetoothAdapter bluetoothAdapter;
-    private ScanSettings scanSettings;
     private List<ScanFilter> scanFilters;
-    private BluetoothLeScanner scanner;
     private List<String> subscribedBeacons;
     private AtomicBoolean currentlyInRange;
     private String userId;
@@ -60,12 +57,7 @@ public class BackgroundScanningService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         currentlyInRange = new AtomicBoolean();
-        //get subscribed devices and scan only for them
-//        Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
-//        subscribedBeacons = new ArrayList<>(set);
-//        scanFilters= setUpFilters(subscribedBeacons);
         bleService.getScanner().startScan(scanFilters,bleService.getScanSettings(), scanCallback);
-
         return START_STICKY;
     }
 
@@ -78,7 +70,7 @@ public class BackgroundScanningService extends Service {
         Set<String> set = getSharedPreferences("devices", Context.MODE_PRIVATE).getStringSet("devices", null);
 
         subscribedBeacons = new ArrayList<>(set);
-
+        //get subscribed devices and scan only for them
         scanFilters = setUpFilters(subscribedBeacons);
         bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bleService = new BLEService(new Handler(), bluetoothManager,scanFilters, ScanSettings.SCAN_MODE_LOW_POWER, getApplicationContext());
@@ -88,7 +80,6 @@ public class BackgroundScanningService extends Service {
         @Override
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
-            Log.d(TAG, "FAILED:" + errorCode);
         }
 
         @Override
@@ -104,9 +95,6 @@ public class BackgroundScanningService extends Service {
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
                         InRangeData inRangeData = new InRangeData(APIKEY, userId, beacon.getUuid(), new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()),beacon.getMajor(), beacon.getMinor());
                         presenceDetectionService.inRangeDetected(inRangeData);
-
-                    } else {
-                        Log.d(TAG, "IN RANGE BUT DOING NOTHING");
                     }
                 }
                  else {
@@ -114,24 +102,12 @@ public class BackgroundScanningService extends Service {
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
                         OutOfRangeData outOfRangeData = new OutOfRangeData(APIKEY, userId, beacon.getUuid(),  new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
                         presenceDetectionService.outOfRangeDetected(outOfRangeData);
-
                         Log.d(TAG, "OUT OF RANGE TRYING TO CONNECT");
-                    } else {
-                        Log.d(TAG, "OUT OF RANGE AND DOING NOTHING");
                     }
                 }
             }
         }
     };
-
-//    private void setUpScan() {
-//        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//        bluetoothAdapter = bluetoothManager.getAdapter();
-//        scanner = bluetoothAdapter.getBluetoothLeScanner();
-//        scanSettings = new ScanSettings.Builder()
-//                .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-//                .build();
-//    }
 
     private List<ScanFilter> setUpFilters(List<String> beaconList) {
         scanFilters = new ArrayList<>();
@@ -145,7 +121,4 @@ public class BackgroundScanningService extends Service {
     private boolean checkRSSIInRange(int rssi) {
         return rssi <= -25 && rssi >= -45;
     }
-
-
-
 }

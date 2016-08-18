@@ -3,7 +3,6 @@ package se.theyellowbelliedmarmot.backatschool.activity;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
@@ -22,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,25 +35,23 @@ import se.theyellowbelliedmarmot.backatschool.tools.Utility;
 
 public class ScanActiveBeacon extends BaseActivity {
 
-    private static final long SCAN_PERIOD = 5000;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 0;
-    private BluetoothLeScanner scanner;
-    private BluetoothAdapter bluetoothAdapter;
     private BluetoothManager bluetoothManager;
-    private ScanSettings scanSettings;
     private List<Beacon> beacons;
-    private List<ScanFilter> scanFilters;
-    private Handler handler;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private BLEService bleService;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState !=null){
+            beacons = (List<Beacon>) savedInstanceState.getSerializable(getString(R.string.beacons));
+        }
+
         setContentView(R.layout.activity_scan_active_beacon);
         setTitle(getString(R.string.activity_title_scan));
 
@@ -72,9 +70,12 @@ public class ScanActiveBeacon extends BaseActivity {
         scanFilters.add(filter);
 
         bleService = new BLEService(new Handler(), bluetoothManager,scanFilters, ScanSettings.SCAN_MODE_LOW_LATENCY , getApplicationContext());
+    }
 
-
-//        setUpBLEScanning();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(getString(R.string.beacons), (Serializable) beacons);
     }
 
     @Override
@@ -109,36 +110,9 @@ public class ScanActiveBeacon extends BaseActivity {
                 addBeaconToList(beacon);
             }
         }
-
     };
 
-//    private void scanBeacon(boolean scan, ScanCallback scanCallback) {
-//        if (scan) {
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    scanner.stopScan(scanCallback);
-//                }
-//            }, SCAN_PERIOD);
-//            scanner.startScan(scanFilters, scanSettings, scanCallback);
-//            // Test this
-//            Toast.makeText(getApplicationContext(), "Scanning for beacons", Toast.LENGTH_SHORT).show();
-//        } else {
-//            scanner.stopScan(scanCallback);
-//        }
-
-
-
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-//        }
-
-// @Override
+    @Override
     protected void onResume() {
         super.onResume();
         if ( bleService.getBluetoothAdapter() == null || !bleService.getBluetoothAdapter().isEnabled()) {
@@ -146,8 +120,6 @@ public class ScanActiveBeacon extends BaseActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
     }
-
-
 
     private void addBeaconToList(Beacon beacon) {
         if (beacons.contains(beacon)) {
@@ -177,17 +149,4 @@ public class ScanActiveBeacon extends BaseActivity {
             return (beaconOne.getRssi() > beaconTwo.getRssi() ? -1 : (beaconOne.getRssi() == beaconTwo.getRssi() ? 0 : 1));
         }
     };
-
-//    private void setUpBLEScanning(){
-//        handler = new Handler();
-//        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//        bluetoothAdapter = bluetoothManager.getAdapter();
-//        scanner = bluetoothAdapter.getBluetoothLeScanner();
-//        scanSettings = new ScanSettings.Builder()
-//                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-//                .build();
-//        scanFilters = new ArrayList<>();
-//        ScanFilter filter = new ScanFilter.Builder().setDeviceName(getString(R.string.beacon_name)).build();
-//        scanFilters.add(filter);
-
 }

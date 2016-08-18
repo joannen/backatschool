@@ -10,5 +10,6 @@
     <string name="beacon_row_default_value">Beacon</string>
     <string name="scan_menu_scan">Scan</string>
     <string name="scan_menu_stop">Stop</string>
+    <string name="beacons">beacons</string>
 
 </resources>

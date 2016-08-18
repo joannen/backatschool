@@ -101,7 +101,6 @@ public class MainActivity extends BaseActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-
     private void registerUser(final User user, final Context context) {
         String input = JsonParser.userInputToJson(APIKEY, user.getFirstName(), user.getLastName());
 
@@ -113,10 +112,10 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         if (result != null) {
-                            Log.d(TAG, result.toString());
-                            Log.d(TAG, "ID_USER: " + result.get("id_user").getAsString());
+                            if (result.get("response_value").getAsString().matches("200")){
+                                Toast.makeText(getApplicationContext(), "User is registered!", Toast.LENGTH_LONG).show();
+                            }
                             saveUserId(getApplicationContext(), result.get("id_user").getAsString());
-
                         } else {
                             Log.d(TAG, "no result");
                         }
