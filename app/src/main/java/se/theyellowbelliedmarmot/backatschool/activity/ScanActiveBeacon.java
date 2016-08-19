@@ -48,10 +48,6 @@ public class ScanActiveBeacon extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState !=null){
-            beacons = (List<Beacon>) savedInstanceState.getSerializable(getString(R.string.beacons));
-        }
-
         setContentView(R.layout.activity_scan_active_beacon);
         setTitle(getString(R.string.activity_title_scan));
 
@@ -73,12 +69,6 @@ public class ScanActiveBeacon extends BaseActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(getString(R.string.beacons), (Serializable) beacons);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.scan, menu);
@@ -90,8 +80,7 @@ public class ScanActiveBeacon extends BaseActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
         }
         bleService.scanBeacon(true, scanCallback);
@@ -100,7 +89,6 @@ public class ScanActiveBeacon extends BaseActivity {
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-
             //the manufacturerSpecificData is bytearray at the 0:th place in the scanRecord
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
 

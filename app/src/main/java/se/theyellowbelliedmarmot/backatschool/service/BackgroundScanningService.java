@@ -84,14 +84,12 @@ public class BackgroundScanningService extends Service {
 
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            Log.d(TAG, String.valueOf(result));
             boolean inRange = checkRSSIInRange(result.getRssi());
             byte[] manufacturerSpecificData = result.getScanRecord().getManufacturerSpecificData().valueAt(0);
 
             if (manufacturerSpecificData.length > 10) {
                 if(inRange) {
                     if (currentlyInRange.compareAndSet(false, true)) {
-                        Log.d(TAG, "IN RANGE TRYING TO CONNECT");
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
                         InRangeData inRangeData = new InRangeData(APIKEY, userId, beacon.getUuid(), new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()),beacon.getMajor(), beacon.getMinor());
                         presenceDetectionService.inRangeDetected(inRangeData);
@@ -102,7 +100,6 @@ public class BackgroundScanningService extends Service {
                         Beacon beacon = Utility.resultToBeacon(result, manufacturerSpecificData);
                         OutOfRangeData outOfRangeData = new OutOfRangeData(APIKEY, userId, beacon.getUuid(),  new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
                         presenceDetectionService.outOfRangeDetected(outOfRangeData);
-                        Log.d(TAG, "OUT OF RANGE TRYING TO CONNECT");
                     }
                 }
             }

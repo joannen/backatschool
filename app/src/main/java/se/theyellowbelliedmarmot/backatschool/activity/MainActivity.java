@@ -38,7 +38,9 @@ public class MainActivity extends BaseActivity {
                     Toast.LENGTH_SHORT).show();
             finish();
         }
+
         //check if user is registered
+        // sep class?
         if (readUser().equals("")) {
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -87,8 +89,6 @@ public class MainActivity extends BaseActivity {
             authInputBox.create();
             authInputBox.show();
         } else {
-            Log.d(TAG, "USERID: " + readUserId());
-            Log.d(TAG, "USER: " + readUser());
             Intent intent = new Intent(this, ScanActiveBeacon.class);
             startActivity(intent);
         }
@@ -116,8 +116,6 @@ public class MainActivity extends BaseActivity {
                                 Toast.makeText(getApplicationContext(), "User is registered!", Toast.LENGTH_LONG).show();
                             }
                             saveUserId(getApplicationContext(), result.get("id_user").getAsString());
-                        } else {
-                            Log.d(TAG, "no result");
                         }
                     }
                 });

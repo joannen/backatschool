@@ -100,8 +100,7 @@ public class BeaconNameFragment extends DialogFragment {
 
     private boolean nameInputCheck(String name){
         if (name.equals("")){
-            Toast.makeText(getActivity(),"No name",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"No name", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

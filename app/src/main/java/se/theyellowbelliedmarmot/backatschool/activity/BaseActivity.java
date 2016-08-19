@@ -28,7 +28,6 @@ import se.theyellowbelliedmarmot.backatschool.tools.JsonParser;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    static final String TAG = "LOGTAG";
     static final String APIKEY = "28742sk238sdkAdhfue243jdfhvnsa1923347";
 
     @Override
@@ -74,7 +73,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             for (String s : jsonBeacons) {
                 JsonObject json = parser.parse(s).getAsJsonObject();
-                Log.d(TAG, json.toString());
                 beacons.add(JsonParser.jsonToBeacon(json));
             }
         }
@@ -88,7 +86,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         for (Beacon beacon : beaconList) {
             JsonObject jsonObject = JsonParser.beaconToJson(beacon);
-            Log.d("JSON AS STRING: ", jsonObject.toString());
             jsonBeacons.add(jsonObject.toString());
         }
 
@@ -123,14 +120,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
         protected List<String> readDeviceAddresses() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("devices", Context.MODE_PRIVATE);
         Set<String> devices = sharedPreferences.getStringSet("devices", null);
         return devices == null ? new ArrayList<String>() : new ArrayList<>(devices);
     }
-
-
-
-
 }

@@ -73,7 +73,6 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
             String minor = getIntent().getStringExtra("minor");
             String rssi = getIntent().getStringExtra("rssi");
             String deviceAddress = getIntent().getStringExtra("deviceAddress");
-            Log.d(TAG, "userid: " + readUserId());
             subscribeToBeacon(readUserId(), uuid, this);
 
             Beacon beacon = new Beacon(uuid, major, minor, Integer.parseInt(rssi), name, deviceAddress);
@@ -91,7 +90,6 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
         //start background scanning service
         Intent intent = new Intent(this, BackgroundScanningService.class);
         startService(intent);
-
     }
 
     private final ScanCallback scanCallback = new ScanCallback() {
@@ -99,7 +97,6 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
         public void onScanResult(int callbackType, ScanResult result) {
             for (Beacon b:existingBeacons){
                 if (result.getDevice().getAddress().equals(b.getDeviceAddress())){
-                    Log.d(TAG, "EQUALS!!");
                     b.setRssi(result.getRssi());
                 }
             }saveBeacon(existingBeacons);
@@ -128,7 +125,6 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
     private void addBeaconToSubscriptionList(Beacon beacon) {
         if (!existingBeacons.contains(beacon)) {
             existingBeacons.add(beacon);
-//            adapter.notifyDataSetChanged();
         }
     }
 
@@ -136,10 +132,7 @@ public class SubscribedBeacons extends BaseActivity implements BeaconNameFragmen
     public void onDialogPositiveClick(android.app.DialogFragment fragment, Beacon beacon, String name) {
         for (Beacon b : existingBeacons) {
             if (b.equals(beacon)) {
-//                existingBeacons.remove(b);
-//                Beacon newBeacon = new Beacon(beacon.getUuid(), beacon.getMajor(), beacon.getMinor(), 1, name, beacon.getDeviceAddress());
                 b.setName(name);
-//                existingBeacons.add(newBeacon);
                 saveBeacon(existingBeacons);
                 adapter.notifyDataSetChanged();
             }

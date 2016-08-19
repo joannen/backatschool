@@ -22,7 +22,6 @@ public final class PresenceDetectionService {
     }
 
     public void inRangeDetected(InRangeData input) {
-//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), input);
         PresenceDetectionInterface presenceDetectionInterface = retrofit.create(PresenceDetectionInterface.class);
         Call<ResponseBody> result = presenceDetectionInterface.beaconInRange(input);
         sendRequest(result);

@@ -21,5 +21,4 @@ public interface PresenceDetectionInterface {
     @POST("beacon_outofrange")
     Call<ResponseBody> beaconOutOfRange(@Field("input") OutOfRangeData input);
 
-
 }
